@@ -25,7 +25,7 @@ http.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           storage.clearToken();
-          // window.location.href = '/';
+          if (location.href !== 'login') window.location.href = '/';
           break;
         default:
           // message.error(error.response.data.message);

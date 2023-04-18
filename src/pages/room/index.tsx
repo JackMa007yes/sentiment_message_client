@@ -5,6 +5,7 @@ import { useStore } from '@/store';
 import Layout from './Layout';
 import UserBar from './userBar';
 import Room from './room';
+import AddUserModal from '@/components/AddUserModal';
 
 export default function index() {
   const setUser = useStore(state => state.setUser);
@@ -17,8 +18,9 @@ export default function index() {
   return (
     <Layout>
       <section className='flex justify-between'>
-        <UserBar current={currentUser} onSelect={setCurrentUser} />
-        <Room user={currentUser} />
+        <AddUserModal />
+        {/* <UserBar current={currentUser} onSelect={setCurrentUser} />
+        <Room user={currentUser} /> */}
       </section>
     </Layout>
   );
