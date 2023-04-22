@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {}
   },
-  plugins: [],
-  corePlugins: {
-    preflight: false
-  }
+  plugins: [
+    // eslint-disable-next-line no-undef
+    require('@tailwindcss/line-clamp') // 引入插件
+  ]
 };

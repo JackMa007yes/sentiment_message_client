@@ -11,3 +11,7 @@ export const GetProfile = (): Promise<Profile> => {
 export const GetUserList = (params: Pagination): Promise<PaginationWrapper<UserListItem>> => {
   return http.get(`/user`, { params });
 };
+
+export const UploadAvatar = (form: FormData): Promise<any> => {
+  return http.post(`/user/avatar`, form);
+};

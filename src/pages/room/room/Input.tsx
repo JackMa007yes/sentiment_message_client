@@ -21,7 +21,7 @@ function Input({ value, onChange, send }: Props) {
             send(e.target.value);
           }
         }}
-        className='h-18 text-lg bg-[#2e343d] w-full rounded-3xl border-gray-500 text-white p-6 hover:border-none focus:border-none'
+        className='h-18 text-lg bg-[#2e343d] w-full rounded-3xl border-none text-white p-6 hover:border-none focus:border-none '
       />
     </div>
   );

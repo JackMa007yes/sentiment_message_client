@@ -3,7 +3,7 @@ import storage from '@/utils/storage';
 
 type State = {
   hasLogin: boolean;
-  user: any;
+  user: Profile | null;
 };
 
 type Action = {

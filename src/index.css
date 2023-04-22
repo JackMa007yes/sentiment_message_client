@@ -5,3 +5,27 @@
 body {
   box-sizing: border-box;
 }
+
+::-webkit-scrollbar {
+  width: 4px;
+  opacity: 0;
+}
+
+
+/* ::-webkit-scrollbar-track {
+  width: 8px;
+  background-color: rgb(241, 241, 241, 0.2);
+} */
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(241, 241, 241, 0.2);
+  border-radius: 4px;
+}
+
+::-moz-scrollbar {
+  width: 4px;
+}
+
+::-moz-scrollbar-thumb {
+  background-color: rgb(241, 241, 241, 0.2);
+}

@@ -18,7 +18,7 @@ http.interceptors.request.use(
 
 http.interceptors.response.use(
   function (response) {
-    return response.data.data;
+    return response.data;
   },
   function (error) {
     if (error.response) {
@@ -47,6 +47,7 @@ http.interceptors.response.use(
 
 export const getToken = () => {
   const value = storage.getToken();
+  console.log(value, 333);
   return value ? 'Bearer ' + value.token : '';
 };
 

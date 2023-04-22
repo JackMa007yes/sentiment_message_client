@@ -1,11 +1,11 @@
 interface Pagination {
   limit?: number;
-  offset?: number;
+  page?: number;
 }
 
 interface PaginationWrapper<T> {
   limit: number;
-  offset: number;
+  page: number;
   total: number;
   data: T[];
 }
