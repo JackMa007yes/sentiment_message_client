@@ -8,6 +8,8 @@ import { useQuery } from '@tanstack/react-query';
 import { GetUserList } from '@/api';
 import Input from './Input';
 import { useStore } from '@/store';
+import { getToken } from '../../../api/http';
+import storage from '@/utils/storage';
 
 const SentimentMap: SentimentRecord = {
   [SentimentScore.peaceful]: [1, 7],
@@ -24,7 +26,7 @@ const SentimentMap: SentimentRecord = {
 };
 
 type Props = {
-  user: UserListItem | null;
+  user: User | null;
 };
 export default function Room({ user }: Props) {
   const userId = useStore(state => state.user?.id);
@@ -61,10 +63,16 @@ export default function Room({ user }: Props) {
     connect();
   }, [user]);
 
+  console.log(55555);
+
   const connect = () => {
-    console.log(99999);
+    console.log(99999, storage.getToken()?.token);
     if (client?.connected) return;
-    const socket = io('http://localhost:3000');
+    const socket = io('http://localhost:3000', {
+      query: {
+        token: storage.getToken()?.token
+      }
+    });
     socket.connect();
 
     function onConnect() {

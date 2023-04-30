@@ -7,7 +7,7 @@ import { AddCircle } from '@mui/icons-material';
 import MapsUgcSharpIcon from '@mui/icons-material/MapsUgcSharp';
 
 type Props = {
-  user: UserListItem;
+  user: User;
   onSelect: (id: number) => void;
   selected: boolean;
   className?: string;

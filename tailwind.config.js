@@ -2,10 +2,14 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {}
+    extend: {
+      colors: {
+        'primary-text': '#76777e',
+        'primary-bg': '#202329',
+        'primary-color': '#9c27b0',
+        'icon-color': '#a9adb9'
+      }
+    }
   },
-  plugins: [
-    // eslint-disable-next-line no-undef
-    require('@tailwindcss/line-clamp') // 引入插件
-  ]
+  plugins: []
 };

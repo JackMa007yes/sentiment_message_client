@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { GetProfile, UploadAvatar } from '@/api';
 import { useStore } from '@/store';
 import Layout from './Layout';
-import UserBar from './userBar';
+import SessionBar from './sessionBar';
 import Room from './room';
 import AddUserModal from '@/components/AddUserModal';
 import Upload from 'rc-upload';
@@ -35,7 +35,7 @@ export default function index() {
 
   console.log(user);
 
-  const [currentUser, setCurrentUser] = useState<null | UserListItem>(null);
+  const [currentUser, setCurrentUser] = useState<null | User>(null);
 
   useQuery(['GetProfile'], GetProfile, {
     onSuccess: setUser
@@ -52,7 +52,7 @@ export default function index() {
 
     <Layout>
       <section className='flex justify-between'>
-        <UserBar current={currentUser} onSelect={setCurrentUser} />
+        <SessionBar current={currentUser} onSelect={setCurrentUser} />
         <Room user={currentUser} />
       </section>
     </Layout>

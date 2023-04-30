@@ -1,16 +1,18 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Pagination, TextField, createTheme } from '@mui/material';
-import { GetUserList } from '@/api';
+import { CreateRoom, GetUserList } from '@/api';
 import { ThemeProvider } from '@emotion/react';
 import Input from '@/pages/room/room/Input';
 import { getBase64 } from '@/utils/avatar';
 import SelectBox from './SelectBox';
+import { useStore } from '@/store';
+import { RoomType } from '@/constants';
 
 const theme = createTheme({
   components: {
@@ -31,20 +33,27 @@ const theme = createTheme({
 type Props = {
   open: boolean;
   onClose: () => void;
-  onAdd: (id: number) => void;
+  onAdd: () => void;
 };
 
-export default function BasicModal({ open, onClose }: Props) {
+export default function BasicModal({ open, onClose, onAdd }: Props) {
+  const user = useStore(state => state.user);
   const [limit, setLimit] = useState(9);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const [userList, setUserList] = useState<UserListItem[]>([]);
+  const [userList, setUserList] = useState<User[]>([]);
   const [selectedUserId, setSelectedUserId] = useState(0);
 
   // const classes = useStyles();
+  const { mutate: createRoomMutate } = useMutation(['CreateRoom'], (data: CreateRoomParams) => CreateRoom(data), {
+    onSuccess: () => {
+      onAdd();
+    }
+  });
 
-  const handleSelected = (userId: number) => {
-    setSelectedUserId(userId === selectedUserId ? 0 : userId);
+  const handleSelected = (selectedUserId: number) => {
+    if (!user) return;
+    createRoomMutate({ type: RoomType.PERSONAL, users: [selectedUserId, user.id] });
   };
 
   useQuery(['GetUserList', limit, page], () => GetUserList({ limit, page }), {

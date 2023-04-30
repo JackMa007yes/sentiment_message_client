@@ -2,9 +2,9 @@ import React from 'react';
 import UserCard from './UserCard';
 
 type Props = {
-  data: UserListItem[];
-  current: UserListItem | null;
-  onSelect: (selected: UserListItem) => void;
+  data: Session[];
+  current: User | null;
+  onSelect: (selected: User) => void;
 };
 export default function UserList({ data, current, onSelect }: Props) {
   return (

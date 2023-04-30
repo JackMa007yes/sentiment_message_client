@@ -1,4 +1,9 @@
-interface UserListItem {
+interface RegisterData {
+  name: string;
+  password: string;
+}
+
+interface User {
   id: number;
   name: string;
   desc: string;
@@ -9,4 +14,4 @@ interface UserListItem {
   };
 }
 
-type Profile = UserListItem;
+type Profile = User;
