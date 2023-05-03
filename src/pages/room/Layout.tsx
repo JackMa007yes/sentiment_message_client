@@ -1,13 +1,20 @@
-import { FC } from 'react';
-import { useStore } from '@/store';
+import { FC, memo } from 'react';
 import Avatar from '@/components/Avatar';
 import Settings from './settings';
+import { useStore } from '@/store';
+import { useQuery } from '@tanstack/react-query';
+import { GetProfile } from '@/api';
 
 const Layout: FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, setUser } = useStore(state => state);
+  useQuery(['GetProfile'], GetProfile, {
+    onSuccess: setUser
+  });
+
   return (
     <div className='w-screen h-screen flex bg-[#2e343d] justify-between'>
       <section className='flex flex-col justify-between px-4 py-8'>
-        <Avatar />
+        <Avatar user={user || undefined} className='w-14 h-14' />
         <Settings></Settings>
       </section>
       <section className='flex-1 bg-[#202329]  rounded-l-[28px] overflow-hidden'>{children}</section>
@@ -15,4 +22,4 @@ const Layout: FC<{ children: React.ReactNode }> = ({ children }) => {
   );
 };
 
-export default Layout;
+export default memo(Layout);

@@ -1,5 +1,6 @@
 import { getBase64 } from '@/utils/avatar';
 import { format } from 'date-fns';
+import { memo } from 'react';
 
 const Avatar = ({ data }: { data: Profile }) => {
   return (
@@ -20,7 +21,7 @@ type Props = {
   selected: boolean;
   onSelect: (selected: Session) => void;
 };
-export default function UserCard({ data, selected, onSelect }: Props) {
+function SessionCard({ data, selected, onSelect }: Props) {
   const formatCount = (count: number) => {
     return count > 99 ? '99+' : count;
   };
@@ -36,11 +37,14 @@ export default function UserCard({ data, selected, onSelect }: Props) {
           <span className='text-lg'>{data.toUser.name}</span>
           <span className='text-xs text-primary-text'>{format(new Date(data.lastMessageTime), 'hh:mm')}</span>
         </section>
-        <section className='text-primary-text text-xs text-ellipsis flex justify-between items-center'>
-          <span>{data.lastMessage || 'let go out'}</span>
-          {!data.unreadCount ? (
+        <section className='text-primary-text text-xs  font-bold flex justify-between items-center '>
+          <span className='overflow-hidden whitespace-nowrap text-ellipsis w-52'>
+            {data.lastMessage || 'let go out'}
+          </span>
+          {/* {JSON.stringify(data)} */}
+          {data.unreadCount ? (
             <span className='flex justify-center items-center rounded-full bg-primary-color p-2 h-5 text-white'>
-              {formatCount(data.unreadCount || 999)}
+              {formatCount(data.unreadCount)}
             </span>
           ) : null}
         </section>
@@ -48,3 +52,5 @@ export default function UserCard({ data, selected, onSelect }: Props) {
     </div>
   );
 }
+
+export default memo(SessionCard);

@@ -1,35 +1,40 @@
-import { useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Search from './Search';
 import { GetSessionList, GetUserList } from '@/api';
-import UserList from './UserList';
+import SessionList from './SessionList';
 import AddUserModal from '@/components/AddUserModal';
 import TopBar from './TopBar';
 
 type Props = {
-  current: User | null;
-  onSelect: (selected: User) => void;
+  current: Session | null;
+  onSelect: (selected: Session) => void;
 };
-export default function SessionBar({ current, onSelect }: Props) {
-  const [modalDisplay, setModalDisplay] = useState(false);
+function SessionBar({ current, onSelect }: Props) {
   const [searchWord, setSearchWord] = useState('');
-  const [userList, setUserList] = useState<User[]>([]);
+  const [filterSessionList, setFilterSessionList] = useState<Session[]>([]);
 
-  const {
-    data: sessionList,
-    isLoading,
-    refetch
-  } = useQuery(['GetSessionList'], () => GetSessionList(), {
-    initialData: []
+  const { data: sessionList, refetch } = useQuery(['GetSessionList'], () => GetSessionList(), {
+    initialData: [],
+    select(data) {
+      return data.sort(
+        (pre, cur) =>
+          new Date(cur.lastMessageTime || cur.createTime).getTime() -
+          new Date(pre.lastMessageTime || pre.createTime).getTime()
+      );
+    }
   });
 
-  console.log(sessionList, 22);
+  useEffect(() => {
+    setFilterSessionList(sessionList.filter(session => session.toUser.name.includes(searchWord)));
+  }, [searchWord, sessionList]);
 
   return (
-    <div className='text-white w-96 h-screen p-6'>
-      <TopBar onInput={setSearchWord} onAdd={() => setModalDisplay(true)} />
-      <UserList data={sessionList} current={current} onSelect={onSelect} />
-      <AddUserModal open={modalDisplay} onClose={() => setModalDisplay(false)} onAdd={() => refetch()} />
+    <div className='text-white w-[440px] h-screen p-6'>
+      <TopBar onInput={setSearchWord} onAdd={refetch} />
+      <SessionList data={filterSessionList} current={current} onSelect={onSelect} />
     </div>
   );
 }
+
+export default memo(SessionBar);

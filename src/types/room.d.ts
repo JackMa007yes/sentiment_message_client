@@ -12,4 +12,13 @@ declare global {
     type: RoomType;
     users: number[];
   }
+
+  interface IMessage {
+    id: number;
+    userId: number;
+    message: string;
+    roomId: number;
+    sentiment_score: number;
+    createdAt: string;
+  }
 }

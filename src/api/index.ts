@@ -31,3 +31,7 @@ export const GetSessionList = (): Promise<Session[]> => {
 export const CreateRoom = (data: CreateRoomParams) => {
   return http.post('/room', data);
 };
+
+export const GetRoomMessage = (id: number, params: Pagination): Promise<PaginationWrapper<IMessage>> => {
+  return http.get(`/room/message/${id}`, { params });
+};

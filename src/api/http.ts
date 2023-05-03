@@ -47,7 +47,6 @@ http.interceptors.response.use(
 
 export const getToken = () => {
   const value = storage.getToken();
-  console.log(value, 333);
   return value ? 'Bearer ' + value.token : '';
 };
 
