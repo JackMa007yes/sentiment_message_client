@@ -28,7 +28,7 @@ function SessionCard({ data, selected, onSelect }: Props) {
 
   return (
     <div
-      className={`p-4 ${selected ? 'bg-[#2e343d]' : null} rounded-[24px] mb-2 flex gap-2 cursor-pointer`}
+      className={`p-4 ${selected ? 'bg-[#1a1e23]' : null} rounded-[24px] mb-2 flex gap-2 cursor-pointer`}
       onClick={() => onSelect(data)}
     >
       <Avatar data={data.toUser} />

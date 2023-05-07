@@ -1,39 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
-import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
-import video from '@/assets/video/male.mp4';
-import { SentimentController, SentimentScore, SentimentRecord } from '@/utils/video/sentimentController';
+import { useEffect, useRef, useState } from 'react';
+import { SentimentController, SentimentScore } from '@/utils/video/sentimentController';
 import { useQuery } from '@tanstack/react-query';
-import { GetRoomMessage, GetUserList } from '@/api';
+import { GetRoomMessage } from '@/api';
 import Input from './Input';
 import { useStore } from '@/store';
-import { getToken } from '../../../api/http';
-import storage from '@/utils/storage';
 import MessagePopup from './MessagePopup';
-
-const SentimentMap: SentimentRecord = {
-  [SentimentScore.peaceful]: [1, 7],
-  [SentimentScore.positive_5]: [7, 12],
-  [SentimentScore.positive_4]: [12, 16],
-  [SentimentScore.positive_3]: [16, 20],
-  [SentimentScore.positive_2]: [20, 24],
-  [SentimentScore.positive_1]: [24, 29],
-  [SentimentScore.negative_1]: [30, 34],
-  [SentimentScore.negative_2]: [34, 38],
-  [SentimentScore.negative_3]: [39, 44],
-  [SentimentScore.negative_4]: [44, 50],
-  [SentimentScore.negative_5]: [44, 50]
-};
+import { MaleVideoSource } from '@/constants/video';
+import { IconButton } from '@mui/material';
+import { MoreHoriz } from '@mui/icons-material';
 
 type Props = {
   session: Session | null;
   onSend: (message: any) => void;
-  // onMessageEvent: (message: any) => void;
-  newMessage: any[];
+  socketMessageList: IMessage[];
 };
-export default function Room({ session, onSend, newMessage }: Props) {
+export default function Room({ session, onSend, socketMessageList }: Props) {
   const user = useStore(state => state.user);
-
   const [limit, setLimit] = useState(20);
   const [page, setPage] = useState(1);
   const [messageHistory, setMessageHistory] = useState<any>([]);
@@ -57,33 +39,24 @@ export default function Room({ session, onSend, newMessage }: Props) {
   }, [session]);
 
   useEffect(() => {
-    console.log(9999);
-
     const box = messageBoxRef.current as null | HTMLElement;
     if (box) {
-      console.log(9999);
       box.scrollTop = box.scrollHeight;
     }
-  }, [newMessage, messageHistory]);
-  console.log(newMessage.length);
 
-  // const { data: userList } = useQuery(['GetUserList'], () => GetUserList({}), {
-  //   initialData: []
-  // });
+    const lastReceiveMessage = [...messageHistory, ...socketMessageList].reverse().find(message => {
+      return message.userId !== user?.id;
+    });
+    if (lastReceiveMessage) {
+      const score = String(lastReceiveMessage.sentiment_score) as SentimentScore;
+      videoController.current?.trigger(score);
+    }
+  }, [socketMessageList, messageHistory]);
 
   useEffect(() => {
-    videoController.current = new SentimentController(videoRomRef.current!, SentimentMap);
+    videoController.current = new SentimentController(videoRomRef.current!, MaleVideoSource.SentimentMap);
     videoController.current.trigger(SentimentScore.peaceful);
   }, []);
-
-  // const pushMessage = (value: { payload: { userId: number; sentiment_score: any } }) => {
-  //   setMessageList(messageRef.current.concat(value.payload));
-  //   messageRef.current.push(value.payload);
-  //   if (value.payload.userId !== Number(userId)) {
-  //     console.log(value.payload.sentiment_score);
-  //     videoController.current?.trigger(String(value.payload.sentiment_score) as SentimentScore);
-  //   }
-  // };
 
   const sendMessage = (val: string) => {
     if (!val) return;
@@ -98,18 +71,23 @@ export default function Room({ session, onSend, newMessage }: Props) {
     setInEditMessage('');
   };
 
-  console.log(newMessage, 5555);
+  console.log(socketMessageList, 5555);
 
   return (
-    <div className='flex-1 h-screen flex bg-black rounde rounded-l-[32px] flex-col'>
-      <section className='text-white text-2xl h-24 font-bold p-8'>{session?.toUser.name}</section>
-      <section className='w-full flex-1 flex justify-between flex-col p-8'>
-        <section className='flex-1 bg-black relative'>
-          <div className='w-full h-full overflow-auto absolute left-0 top-0 flex justify-center items-center'>
-            <video ref={videoRomRef} className='' src={video} muted={true}></video>
+    <div className='mr-8 my-10 rounded-t-[24px] flex-1 h-[calc(100vh-30px)] pb-8 flex rounde flex-col overflow-hidden bg-[#1d1e24]'>
+      <section className='text-white text-xl h-16 font-bold px-8 flex items-center justify-between bg-[#16171b]'>
+        <span>{session?.toUser.name}</span>
+        <IconButton aria-label='delete' color='primary'>
+          <MoreHoriz sx={{ color: 'white' }} />
+        </IconButton>
+      </section>
+      <section className='w-full flex-1 flex justify-between flex-col'>
+        <section className='flex-1 relative p-8'>
+          <div className='w-full h-full overflow-auto absolute left-0 top-0 flex justify-center items-center mix-blend-screen'>
+            <video ref={videoRomRef} className='' src={MaleVideoSource.video} muted={true}></video>
           </div>
-          <div className='w-full h-full overflow-auto absolute left-0 top-0' ref={messageBoxRef}>
-            {[...messageHistory, ...newMessage].map((item: IMessage) => {
+          <div className='w-full h-full overflow-auto absolute left-0 top-0 px-6 p-2' ref={messageBoxRef}>
+            {[...messageHistory, ...socketMessageList].map((item: IMessage) => {
               return (
                 <MessagePopup
                   data={item}

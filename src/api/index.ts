@@ -14,7 +14,7 @@ export const GetProfile = (): Promise<Profile> => {
   return http.get(`/user/my`);
 };
 
-export const GetUserList = (params: Pagination): Promise<PaginationWrapper<User>> => {
+export const GetUserList = (params: Pagination & { keywords?: string }): Promise<PaginationWrapper<User>> => {
   return http.get(`/user`, { params });
 };
 
@@ -22,9 +22,17 @@ export const UploadAvatar = (form: FormData): Promise<any> => {
   return http.post(`/user/avatar`, form);
 };
 
+export const UpdateProfile = (data: UpdateProfileData): Promise<any> => {
+  return http.patch(`/user`, data);
+};
+
 // Session
 export const GetSessionList = (): Promise<Session[]> => {
   return http.get(`/session`);
+};
+
+export const checkSessionMessage = (id: number) => {
+  return http.post(`/session/check/${id}`);
 };
 
 // Room

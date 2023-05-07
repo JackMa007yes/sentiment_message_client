@@ -1,10 +1,13 @@
-interface Session {
+interface SessionBase {
   id: number;
-  room: Room;
-  fromUser: User;
-  toUser: User;
   unreadCount: number;
   lastMessage: string;
   lastMessageTime: string;
   createTime: string;
+}
+
+interface Session extends SessionBase {
+  room: Room;
+  fromUser: User;
+  toUser: User;
 }

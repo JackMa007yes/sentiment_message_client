@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { enqueueSnackbar } from 'notistack';
 import storage from '@/utils/storage';
 
 const http = axios.create({
@@ -28,7 +29,7 @@ http.interceptors.response.use(
           if (location.href !== 'login') window.location.href = '/';
           break;
         default:
-          // message.error(error.response.data.message);
+          enqueueSnackbar(error.response.data.message, { variant: 'error' });
           break;
       }
     } else {

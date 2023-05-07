@@ -3,6 +3,12 @@ interface RegisterData {
   password: string;
 }
 
+interface UpdateProfileData {
+  name: string;
+  desc: string;
+  gender: number;
+}
+
 interface User {
   id: number;
   name: string;

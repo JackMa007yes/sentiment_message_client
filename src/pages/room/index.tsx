@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { io } from 'socket.io-client';
-import { useStore } from '@/store';
 import Layout from './Layout';
 import SessionBar from './sessionBar';
 import Room from './room';
@@ -10,7 +9,7 @@ import { getToken } from '@/api/http';
 import storage from '@/utils/storage';
 import { Socket } from 'socket.io';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
-import { GetProfile } from '@/api';
+import { checkSessionMessage, GetProfile } from '@/api';
 
 interface ServerToClientEvents extends DefaultEventsMap {
   message: (message: any) => void;
@@ -24,11 +23,13 @@ interface ServerToClientEvents extends DefaultEventsMap {
 }
 
 export default function index() {
-  const setUser = useStore(state => state.setUser);
   const [currentSession, setCurrentSession] = useState<null | Session>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [client, setClient] = useState<Socket<ServerToClientEvents, ServerToClientEvents> | null>(null);
-  const [newMessage, setNewMessage] = useState<any[]>([]);
+  const [socketMessageList, setSocketMessageList] = useState<IMessage[]>([]);
+  const [updatedSessionMap, setUpdatedSessionMap] = useState<Record<string, SessionBase>>({});
+
+  const { mutateAsync: checkMessageMutate } = useMutation(['checkSessionMessage'], checkSessionMessage);
 
   // const connect = () => {
   //   if (client?.connected) return;
@@ -80,13 +81,17 @@ export default function index() {
     }
 
     function onMessageEvent(value: any) {
-      console.log('in function');
-      setNewMessage(previous => [...previous, value.payload]);
+      setSocketMessageList(previous => [...previous, value.payload]);
+    }
+
+    function onSessionEvent(value: any) {
+      setUpdatedSessionMap(previous => ({ ...previous, [value.payload.id]: value.payload }));
     }
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
     socket.on('message', onMessageEvent);
+    socket.on('session', onSessionEvent);
 
     setClient(socket);
 
@@ -94,6 +99,7 @@ export default function index() {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       socket.off('message', onMessageEvent);
+      socket.off('session', onSessionEvent);
     };
   }, []);
 
@@ -104,21 +110,18 @@ export default function index() {
 
   useEffect(() => {
     currentSession && client?.emit('joinRoom', { userId: currentSession.fromUser.id, roomId: currentSession.room.id });
-    setNewMessage([]);
+    currentSession && currentSession.unreadCount && checkMessageMutate(currentSession.id);
+    setSocketMessageList([]);
   }, [currentSession]);
 
   const seedMessage = (message: any) => {
     client?.emit('message', message);
   };
 
-  console.log(777, newMessage.length);
-
   return (
-    <Layout>
-      <section className='flex justify-between'>
-        <SessionBar current={currentSession} onSelect={setCurrentSession} />
-        <Room session={currentSession} onSend={seedMessage} newMessage={newMessage} />
-      </section>
-    </Layout>
+    <section className='flex justify-between bg-primary-bg'>
+      <SessionBar current={currentSession} onSelect={setCurrentSession} updatedSession={updatedSessionMap} />
+      <Room session={currentSession} onSend={seedMessage} socketMessageList={socketMessageList} />
+    </section>
   );
 }

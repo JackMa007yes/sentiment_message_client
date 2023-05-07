@@ -1,61 +1,30 @@
-import { Button, TextField } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Login } from '@/api';
-import storage from '@/utils/storage';
-import { useNavigate } from 'react-router-dom';
-import { useStore } from '@/store';
+import LoginPannel from './LoginPannel';
+import SignUpPannel from './SignUpPannel';
+import memojiBg from '@/assets/img/memoji.jpg';
 
+enum PannelType {
+  LOGIN = 'logIn',
+  SIGNUP = 'signUp'
+}
 export default function LoginPage() {
-  const navigator = useNavigate();
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const setLogin = useStore(state => state.setLogin);
-
-  const { mutateAsync } = useMutation(['Login'], Login, {
-    onSuccess: data => {
-      storage.setToken({ token: data.access_token });
-      setLogin(true);
-      navigator('/app');
-    }
-  });
-
-  const handleLogin = () => {
-    mutateAsync({
-      name,
-      password
-    });
-  };
-
+  const [curPannel, setCurPannel] = useState<PannelType>(PannelType.LOGIN);
   return (
-    <div className='w-screen h-screen bg-slate-600 flex justify-center items-center'>
-      <div className='bg-white w-[700px] h-[400px] rounded-3xl p-10 flex flex-col gap-14'>
-        <h1 className='text-center'>登录</h1>
-
-        <TextField
-          id='name'
-          label='name'
-          value={name}
-          InputLabelProps={{
-            shrink: true
-          }}
-          variant='filled'
-          className='w-full block p-4'
-          onChange={event => setName(event.target.value)}
-        />
-
-        <TextField
-          id='password'
-          label='password'
-          value={password}
-          InputLabelProps={{
-            shrink: true
-          }}
-          variant='filled'
-          className='w-full mt-40'
-          onChange={event => setPassword(event.target.value)}
-        />
-        <Button onClick={handleLogin}>Login</Button>
+    <div className="w-screen min-w-[1200px] min-h-[600px] text-white h-screen bg-[#26282d] relative bg-[url('../../assets/img/memoji.jpg')]">
+      <img
+        src={memojiBg}
+        alt=''
+        className='absolute right-0 h-full top-0 object-cover -mr-28 hover:scale-105 transition-all duration-700'
+      ></img>
+      <span className='absolute right-10 bottom-4 text-primary-text text-xs '>Image Source: Apple</span>
+      <div className='w-[45%] h-full bg-[#26282d] z-2 absolute left-0 top-0 border-red-300 flex items-center justify-center'>
+        <section className='w-1/2'>
+          {curPannel === PannelType.LOGIN ? (
+            <LoginPannel onJump={() => setCurPannel(PannelType.SIGNUP)} />
+          ) : (
+            <SignUpPannel onJump={() => setCurPannel(PannelType.LOGIN)} />
+          )}
+        </section>
       </div>
     </div>
   );

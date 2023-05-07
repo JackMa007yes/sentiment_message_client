@@ -5,6 +5,7 @@ import FemaleSharpIcon from '@mui/icons-material/FemaleSharp';
 import { IconButton } from '@mui/material';
 import { AddCircle } from '@mui/icons-material';
 import MapsUgcSharpIcon from '@mui/icons-material/MapsUgcSharp';
+import Avatar from './Avatar';
 
 type Props = {
   user: User;
@@ -13,27 +14,21 @@ type Props = {
   className?: string;
 };
 
-export default function SelectBox({ user, onSelect, selected }: Props) {
+export default function UserCard({ user, onSelect, selected }: Props) {
   return (
     <div
-      className={`h-28 rounded-2xl w-[300px] bg-[#33373f] flex justify-start items-center gap-4 pl-4  relative overflow-hidden`}
+      className={`h-full rounded-2xl w-full bg-[#33373f] flex justify-start items-center gap-4 pl-4  relative overflow-hidden`}
     >
-      <section className='w-20 h-20 overflow-hidden rounded-lg flex-shrink-0'>
-        {user?.avatar?.data.length ? (
-          <img src={getBase64(user.avatar.data)} alt='' className='min-w-full min-h-full'></img>
-        ) : (
-          <section />
-        )}
-      </section>
-      <section className='text-xl text-white'>
-        <section className='flex items-center mb-3'>
-          <span className='text-xl w-24 overflow-hidden whitespace-nowrap text-ellipsis'>{user.name}</span>
+      <Avatar user={user} className='w-24 h-24 rounded-lg overflow-hidden flex-0'></Avatar>
+      <section className='text-xl text-white flex-1'>
+        <section className='flex items-center mb-5 mt-2'>
+          <span className='text-xl overflow-hidden whitespace-nowrap text-ellipsis'>{user.name}</span>
           <span className={`${user.gender ? 'text-blue-400' : 'text-red-400'} h-8 ml-4`}>
             {user.gender ? <MaleSharpIcon /> : <FemaleSharpIcon />}
           </span>
         </section>
-        <section className='text-xs text-gray-400 w-28  h-10 line-clamp-2'>
-          {user.desc || '这个用户很懒，什么都没有写'}
+        <section className='text-xs text-gray-400  h-8 line-clamp-2'>
+          {user.desc || 'This user is lazy and writes nothing'}
         </section>
       </section>
       <span

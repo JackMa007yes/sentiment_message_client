@@ -10,9 +10,10 @@ import { CreateRoom, GetUserList } from '@/api';
 import { ThemeProvider } from '@emotion/react';
 import Input from '@/pages/room/room/Input';
 import { getBase64 } from '@/utils/avatar';
-import SelectBox from './SelectBox';
+import SelectBox from '../pages/users/UserCard';
 import { useStore } from '@/store';
 import { RoomType } from '@/constants';
+import CustomTextField from './ui/CustomTextFiled';
 
 const theme = createTheme({
   components: {
@@ -74,8 +75,9 @@ export default function BasicModal({ open, onClose, onAdd }: Props) {
         <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-8 rounded-[40px] bg-[#26282e] '>
           {/* <TextField fullWidth className='bg-white'></TextField> */}
           {/* <Input></Input> */}
-          <section className='w-full '>
-            <TextField id='outlined-basic' fullWidth variant='filled' />
+          <section className='w-full'>
+            <CustomTextField fullWidth />
+            {/* <TextField id='outlined-basic' fullWidth variant='filled' /> */}
           </section>
           <section className='flex justify-start w-[940px] items-start gap-4 flex-wrap my-8'>
             {userList.map(item => {

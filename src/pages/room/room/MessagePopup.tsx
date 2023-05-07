@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStore } from '@/store';
-import Avatar from '@/components/Avatar';
+import Avatar from '@/pages/users/Avatar';
 
 type Props = {
   data: IMessage;
@@ -29,12 +29,15 @@ export default function MessagePopup({ data, user }: Props) {
     >
       <section
         className={`text-white px-4 py-3 leading-8 rounded-2xl max-w-[52%] ${
-          data.userId === mine?.id ? 'bg-[#6b8afd]' : 'bg-[#2e343d]'
+          data.userId === mine?.id ? 'bg-[#b785f5]' : 'bg-[#2e343d]'
         }`}
       >
         {data.message}
       </section>
-      <Avatar user={user} className={`w-12 h-12  ${data.userId === mine?.id ? 'ml-4' : 'mr-4'}`}></Avatar>
+      <Avatar
+        user={user || null}
+        className={`w-12 h-12 rounded-lg overflow-hidden ${data.userId === mine?.id ? 'ml-4' : 'mr-4'}`}
+      ></Avatar>
     </div>
   );
 }
