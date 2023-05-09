@@ -5,9 +5,10 @@ import { useQuery } from '@tanstack/react-query';
 import { GetProfile } from '@/api';
 
 export default function Layout() {
-  const setUser = useStore(state => state.setUser);
+  const setProfile = useStore(state => state.setProfile);
+
   useQuery(['GetProfile'], GetProfile, {
-    onSuccess: setUser
+    onSuccess: setProfile
   });
 
   return (

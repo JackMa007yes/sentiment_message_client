@@ -12,7 +12,7 @@ export default function Avatar({ user, className }: Props) {
     <section className={className || ''}>
       <section className='bg-gray-600 flex justify-center items-center w-full h-full text-white text-3xl overflow-hidden'>
         {user?.avatar?.data?.length ? (
-          <img src={getBase64(user.avatar.data)}></img>
+          <img src={getBase64(user.avatar.data)} alt=''></img>
         ) : (
           <span>{getAvatarText(user?.name)}</span>
         )}

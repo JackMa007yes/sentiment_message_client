@@ -1,4 +1,4 @@
-import { RoomType } from '@/constants';
+import { RoomType } from '@/constants/common';
 
 declare global {
   interface Room {

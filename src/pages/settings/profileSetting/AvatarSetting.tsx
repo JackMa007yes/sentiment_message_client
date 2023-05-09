@@ -1,17 +1,17 @@
 import Upload from 'rc-upload';
 import { getToken } from '@/api/http';
-import Avatar from '@/pages/users/Avatar';
+import Avatar from '@/components/ui/Avatar';
 import { useStore } from '@/store';
 import { useQuery } from '@tanstack/react-query';
 import { GetProfile } from '@/api';
 import { useSnackbar } from 'notistack';
 
 export default function AvatarSetting() {
-  const { user, setUser } = useStore(state => state);
+  const { profile, setProfile } = useStore(state => state);
   const { enqueueSnackbar } = useSnackbar();
 
   const { refetch } = useQuery(['GetProfile'], GetProfile, {
-    onSuccess: setUser
+    onSuccess: setProfile
   });
 
   const beforeUpload = (file: any) => {
@@ -51,7 +51,7 @@ export default function AvatarSetting() {
     <div className='flex'>
       <section className='w-[200px] text-gray-300'>Avatar</section>
       <section>
-        <Upload {...props}>{<Avatar user={user} className='w-32 h-32'></Avatar>}</Upload>
+        <Upload {...props}>{<Avatar user={profile} className='w-32 h-32'></Avatar>}</Upload>
       </section>
     </div>
   );

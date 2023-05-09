@@ -33,13 +33,7 @@ http.interceptors.response.use(
           break;
       }
     } else {
-      switch (error.code) {
-        case 'ECONNABORTED':
-          // message.error('请求超时！');
-          break;
-        default:
-          break;
-      }
+      // Noop
     }
 
     return Promise.reject(error);

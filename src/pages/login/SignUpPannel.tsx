@@ -1,85 +1,90 @@
-import { Button, FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Login } from '@/api';
-import storage from '@/utils/storage';
-import { useNavigate } from 'react-router-dom';
-import { useStore } from '@/store';
+import { useMutation } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+import { Button, FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { Register } from '@/api';
 import CustomTextField from '@/components/ui/CustomTextFiled';
+import { GenderEnum } from '@/constants/common';
 
 interface Props {
   onJump: () => void;
 }
 export default function SignUpPannel({ onJump }: Props) {
-  const navigator = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [value, setValue] = useState('male');
-  const setLogin = useStore(state => state.setLogin);
+  const [gender, setGender] = useState<GenderEnum>(GenderEnum.male);
 
-  const { mutateAsync } = useMutation(['Login'], Login, {
-    onSuccess: data => {
-      storage.setToken({ token: data.access_token });
-      setLogin(true);
-      navigator('/app');
+  const { mutateAsync } = useMutation(['Register'], Register, {
+    onSuccess: () => {
+      enqueueSnackbar('Registration success', { variant: 'success' });
     }
   });
 
-  const handleLogin = () => {
-    mutateAsync({
-      name,
-      password
-    });
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    if (name.trim() && password.trim()) {
+      mutateAsync({
+        name,
+        password,
+        gender
+      });
+    } else {
+      enqueueSnackbar('Please check the input', { variant: 'warning' });
+    }
   };
 
   return (
     <div className='rounded-3xl flex flex-col gap-10 w-full'>
-      <h1 className='font-bold text-2xl'>Sign Up</h1>
-      <CustomTextField
-        id='name'
-        placeholder='name'
-        color='secondary'
-        value={name}
-        InputLabelProps={{
-          shrink: true
-        }}
-        onChange={(event: any) => setName(event.target.value)}
-      ></CustomTextField>
+      <h1 className='text-2xl'>Sign Up</h1>
 
-      <CustomTextField
-        id='password'
-        // label='password'
-        placeholder='password'
-        color='secondary'
-        value={password}
-        type='password'
-        InputLabelProps={{
-          shrink: true
-        }}
-        // variant='filled'
-        className='w-full mt-40'
-        onChange={(event: any) => setPassword(event.target.value)}
-      />
+      <form onSubmit={handleSubmit}>
+        <FormControl sx={{ width: '100%', mb: 3 }}>
+          <CustomTextField
+            id='name'
+            placeholder='name'
+            color='secondary'
+            value={name}
+            InputLabelProps={{
+              shrink: true
+            }}
+            required
+            onChange={(event: any) => setName(event.target.value)}
+          ></CustomTextField>
+        </FormControl>
 
-      <FormControl>
-        <RadioGroup row value={value} onChange={val => setValue(val.target.value)}>
-          <FormControlLabel
-            value='female'
-            control={<Radio color='secondary' sx={{ color: 'gray' }} />}
-            label='Female'
+        <FormControl sx={{ width: '100%', mb: 3 }}>
+          <CustomTextField
+            id='password'
+            // label='password'
+            placeholder='password'
+            color='secondary'
+            value={password}
+            type='password'
+            InputLabelProps={{
+              shrink: true
+            }}
+            required
+            onChange={(event: any) => setPassword(event.target.value)}
           />
-          <FormControlLabel value='male' control={<Radio color='secondary' sx={{ color: 'gray' }} />} label='Male' />
-        </RadioGroup>
-      </FormControl>
+        </FormControl>
 
-      <Button onClick={handleLogin} size='large' color='secondary' variant='contained' sx={{ borderRadius: '12px' }}>
-        SIGN UP
-      </Button>
+        <FormControl sx={{ width: '100%', mb: 3 }}>
+          <RadioGroup row value={gender} onChange={(e, v) => setGender(Number(v))}>
+            <FormControlLabel value={GenderEnum.male} control={<Radio sx={{ color: 'gray' }} />} label='Male' />
+            <FormControlLabel value={GenderEnum.female} control={<Radio sx={{ color: 'gray' }} />} label='Female' />
+          </RadioGroup>
+        </FormControl>
+
+        <Button size='large' type='submit' variant='contained' sx={{ borderRadius: '12px', width: '100%' }}>
+          SIGN UP
+        </Button>
+      </form>
+
       <h4 className='-mt-4 font-sm text-primary-text'>
         Already have a account?
-        <Button color='secondary' onClick={() => onJump()}>
-          Login In
-        </Button>
+        <Button onClick={() => onJump()}>Login In</Button>
       </h4>
     </div>
   );

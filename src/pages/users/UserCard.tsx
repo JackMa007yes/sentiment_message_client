@@ -1,20 +1,16 @@
-import { getBase64 } from '@/utils/avatar';
-import React from 'react';
+import { memo } from 'react';
 import MaleSharpIcon from '@mui/icons-material/MaleSharp';
 import FemaleSharpIcon from '@mui/icons-material/FemaleSharp';
-import { IconButton } from '@mui/material';
-import { AddCircle } from '@mui/icons-material';
 import MapsUgcSharpIcon from '@mui/icons-material/MapsUgcSharp';
-import Avatar from './Avatar';
+import Avatar from '@/components/ui/Avatar';
 
 type Props = {
   user: User;
+  disabled: boolean;
   onSelect: (id: number) => void;
-  selected: boolean;
-  className?: string;
 };
 
-export default function UserCard({ user, onSelect, selected }: Props) {
+function UserCard({ user, disabled, onSelect }: Props) {
   return (
     <div
       className={`h-full rounded-2xl w-full bg-[#33373f] flex justify-start items-center gap-4 pl-4  relative overflow-hidden`}
@@ -32,14 +28,15 @@ export default function UserCard({ user, onSelect, selected }: Props) {
         </section>
       </section>
       <span
-        className='w-10 flex justify-center items-center cursor-pointer transition-all bg-[#9c27b0] h-full text-white text-sm active:bg-white active:text-[#9c27b0] hover:scale-125'
-        onClick={() => onSelect(user.id)}
+        className={`w-10 flex justify-center items-center transition-all h-full text-white text-sm active:text-[#9c27b0]  ${
+          disabled ? 'cursor-not-allowed bg-gray-500' : 'hover:scale-125 cursor-pointer bg-[#9c27b0] active:bg-white'
+        }`}
+        onClick={() => !disabled && onSelect(user.id)}
       >
-        {/* <Checkbox checked={selected}></Checkbox> */}
-        {/* <IconButton aria-label='delete' size='large'> */}
         <MapsUgcSharpIcon />
-        {/* </IconButton> */}
       </span>
     </div>
   );
 }
+
+export default memo(UserCard);

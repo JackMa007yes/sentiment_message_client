@@ -7,14 +7,14 @@ export const Login = (params: LoginParams): Promise<LoginData> => {
 
 // User
 export const Register = (data: RegisterData): Promise<RegisterData> => {
-  return http.post('/api/user', data);
+  return http.post('/user', data);
 };
 
 export const GetProfile = (): Promise<Profile> => {
   return http.get(`/user/my`);
 };
 
-export const GetUserList = (params: Pagination & { keywords?: string }): Promise<PaginationWrapper<User>> => {
+export const GetUserList = (params: Pagination & { keyword?: string }): Promise<PaginationWrapper<User>> => {
   return http.get(`/user`, { params });
 };
 

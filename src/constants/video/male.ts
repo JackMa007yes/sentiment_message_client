@@ -1,7 +1,7 @@
 import { SentimentScore, SentimentRecord } from '@/utils/video/sentimentController';
 import video from '@/assets/video/male.mp4';
 
-const SentimentMap: SentimentRecord = {
+const SentimentClipMap: SentimentRecord = {
   [SentimentScore.peaceful]: [1, 7],
   [SentimentScore.positive_5]: [7, 12],
   [SentimentScore.positive_4]: [12, 16],
@@ -17,5 +17,5 @@ const SentimentMap: SentimentRecord = {
 
 export const MaleVideoSource = {
   video,
-  SentimentMap
+  SentimentClipMap
 };

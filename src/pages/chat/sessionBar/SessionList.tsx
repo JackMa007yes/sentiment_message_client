@@ -1,5 +1,4 @@
 import SessionCard from './SessionCard';
-import { useState } from 'react';
 
 type Props = {
   data: Session[];

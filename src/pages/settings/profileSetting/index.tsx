@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
-import AvatarSetting from './AvatarSetting';
 import {
   Box,
   Button,
@@ -13,17 +12,18 @@ import {
   RadioGroup,
   TextField
 } from '@mui/material';
+import AvatarSetting from './AvatarSetting';
 import { useStore } from '@/store';
 import { GetProfile, UpdateProfile } from '@/api';
 
 export default function index() {
-  const { user, setUser } = useStore(state => state);
+  const { profile, setProfile } = useStore(state => state);
   const [form, setForm] = useState<Partial<UpdateProfileData>>({});
   const [changed, setChanged] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const { refetch } = useQuery(['GetProfile'], GetProfile, {
-    onSuccess: setUser
+    onSuccess: setProfile
   });
 
   const { mutate: updateMutate } = useMutation(['UpdateProfile'], UpdateProfile, {
@@ -36,18 +36,18 @@ export default function index() {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     updateMutate({
-      name: form.name || user!.name,
-      gender: typeof form.gender === 'number' ? form.gender : user!.gender,
-      desc: form.desc || user!.desc
+      name: form.name || profile!.name,
+      gender: typeof form.gender === 'number' ? form.gender : profile!.gender,
+      desc: form.desc || profile!.desc
     });
   };
 
   useEffect(() => {
     type KeyType = keyof UpdateProfileData;
-    setChanged((Object.keys(form) as KeyType[]).some(key => form[key] !== user?.[key]));
-  }, [form, user]);
+    setChanged((Object.keys(form) as KeyType[]).some(key => form[key] !== profile?.[key]));
+  }, [form, profile]);
 
-  return user ? (
+  return profile ? (
     <div className='py-8 px-4'>
       <AvatarSetting />
       <Divider sx={{ margin: '40px 0' }} />
@@ -60,7 +60,7 @@ export default function index() {
             <TextField
               type='text'
               variant='standard'
-              defaultValue={user?.name}
+              defaultValue={profile?.name}
               required
               sx={{ width: 300 }}
               onChange={e => setForm({ ...form, name: e.target.value })}
@@ -72,7 +72,7 @@ export default function index() {
               Gender
             </FormLabel>
             <RadioGroup
-              defaultValue={user?.gender}
+              defaultValue={profile?.gender}
               name='radio-buttons-group'
               row
               aria-required
@@ -92,7 +92,7 @@ export default function index() {
             <TextField
               type='text'
               variant='standard'
-              defaultValue={user?.desc}
+              defaultValue={profile?.desc}
               sx={{ width: 300 }}
               required
               onChange={e => setForm({ ...form, desc: e.target.value })}

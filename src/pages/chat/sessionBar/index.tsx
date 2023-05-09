@@ -1,24 +1,22 @@
 import { memo, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import Search from './Search';
-import { GetSessionList, GetUserList } from '@/api';
-import SessionList from './SessionList';
+import { debounce } from 'lodash-es';
+import { GetSessionList } from '@/api';
+import { useStore } from '@/store';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-import AddUserModal from '@/components/AddUserModal';
 import CustomTextField from '@/components/ui/CustomTextFiled';
+import SessionList from './SessionList';
 
 type Props = {
-  current: Session | null;
   updatedSession: Record<string, SessionBase>;
-  onSelect: (selected: Session) => void;
 };
-function SessionBar({ current, onSelect, updatedSession }: Props) {
+function SessionBar({ updatedSession }: Props) {
+  const { session, sessionList, setSession, setSessionList } = useStore(state => state);
   const [searchWord, setSearchWord] = useState('');
-  const [sessionList, setSessionList] = useState<Session[]>([]);
   const [filterSessionList, setFilterSessionList] = useState<Session[]>([]);
 
-  const { refetch } = useQuery(['GetSessionList'], () => GetSessionList(), {
+  useQuery(['GetSessionList'], () => GetSessionList(), {
     initialData: [],
     onSuccess(data) {
       const res = data.sort(
@@ -37,15 +35,7 @@ function SessionBar({ current, onSelect, updatedSession }: Props) {
     setSessionList(newSessionList);
   };
 
-  const debouncedHandleInput = () => {
-    // TODO
-  };
-
-  useEffect(() => {
-    setFilterSessionList(sessionList.filter(session => session.toUser.name.includes(searchWord)));
-  }, [searchWord, sessionList]);
-
-  useEffect(() => {
+  const mergeSessionList = (updatedSession: Record<string, SessionBase>) => {
     const newSessionList = sessionList.map(session => {
       const newSession = updatedSession[session.id];
       if (newSession) {
@@ -57,11 +47,23 @@ function SessionBar({ current, onSelect, updatedSession }: Props) {
         return session;
       }
     });
-    setSessionList(newSessionList);
+    return newSessionList;
+  };
+
+  const debouncedHandleInput = debounce(setSearchWord, 300);
+
+  useEffect(() => {
+    setFilterSessionList(
+      sessionList.filter(session => session.toUser.name.toLowerCase().includes(searchWord.trim().toLowerCase()))
+    );
+  }, [searchWord, sessionList]);
+
+  useEffect(() => {
+    setSessionList(mergeSessionList(updatedSession));
   }, [updatedSession]);
 
   return (
-    <div className='text-white w-[440px] h-screen p-10'>
+    <div className='text-white w-[400px] h-screen py-10 px-8'>
       <CustomTextField
         fullWidth
         placeholder='Search User'
@@ -72,7 +74,7 @@ function SessionBar({ current, onSelect, updatedSession }: Props) {
             </InputAdornment>
           )
         }}
-        onChange={debouncedHandleInput}
+        onChange={(e: any) => debouncedHandleInput(e.target.value)}
         inputProps={{
           style: {
             height: '28px'
@@ -81,10 +83,10 @@ function SessionBar({ current, onSelect, updatedSession }: Props) {
       />
       <SessionList
         data={filterSessionList}
-        current={current}
+        current={session}
         onSelect={session => {
           checkMessage(session);
-          onSelect(session);
+          setSession(session);
         }}
       />
     </div>

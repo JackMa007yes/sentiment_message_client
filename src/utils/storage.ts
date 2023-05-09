@@ -1,4 +1,4 @@
-const storagePrefix = 'sentiment_messgae_token';
+const storagePrefix = 'sentiment_message_token';
 
 const storage = {
   getToken: () => {

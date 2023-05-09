@@ -1,11 +1,11 @@
 import { useRoutes, Navigate } from 'react-router-dom';
-import Room from '@/pages/room';
+import { useAuth } from '@/hooks/useAuth';
+import Chat from '@/pages/chat';
 import Layout from '@/components/layout';
 import Settings from '@/pages/settings';
 import Users from '@/pages/users';
 import Login from '@/pages/login';
 import Landing from '@/pages/landing';
-import { useAuth } from '@/hooks/useAuth';
 
 const protectedRoutes = [
   {
@@ -18,7 +18,7 @@ const protectedRoutes = [
       },
       {
         path: 'chat',
-        element: <Room />
+        element: <Chat />
       },
       { path: 'users', element: <Users /> },
       { path: 'settings', element: <Settings /> }
@@ -45,7 +45,7 @@ const commonRoute = [
 ];
 
 function AppRoutes() {
-  const [hasAuth] = useAuth();
+  const { hasAuth } = useAuth();
 
   const routes = hasAuth ? protectedRoutes : publicRoutes;
 

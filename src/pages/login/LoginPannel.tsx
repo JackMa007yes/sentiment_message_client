@@ -1,17 +1,20 @@
-import { Button } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
+import { Button, FormControl } from '@mui/material';
+import CustomTextField from '@/components/ui/CustomTextFiled';
 import { Login } from '@/api';
 import storage from '@/utils/storage';
-import { useNavigate } from 'react-router-dom';
 import { useStore } from '@/store';
-import CustomTextField from '@/components/ui/CustomTextFiled';
 
 interface Props {
   onJump: () => void;
 }
 export default function LoginPannel({ onJump }: Props) {
   const navigator = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const setLogin = useStore(state => state.setLogin);
@@ -24,49 +27,62 @@ export default function LoginPannel({ onJump }: Props) {
     }
   });
 
-  const handleLogin = () => {
-    mutateAsync({
-      name,
-      password
-    });
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    if (name.trim() && password.trim()) {
+      mutateAsync({
+        name,
+        password
+      });
+    } else {
+      enqueueSnackbar('Please check the input', { variant: 'warning' });
+    }
   };
 
   return (
     <div className='rounded-3xl flex flex-col gap-10 w-full'>
-      <h1 className='font-bold text-2xl'>Log In</h1>
-      <CustomTextField
-        id='name'
-        placeholder='name'
-        color='secondary'
-        value={name}
-        InputLabelProps={{
-          shrink: true
-        }}
-        onChange={(event: any) => setName(event.target.value)}
-      ></CustomTextField>
+      <h1 className='text-2xl'>Log In</h1>
+      <form onSubmit={handleSubmit}>
+        <FormControl sx={{ width: '100%', mb: 3 }}>
+          <CustomTextField
+            id='name'
+            placeholder='name'
+            color='secondary'
+            value={name}
+            InputLabelProps={{
+              shrink: true
+            }}
+            required
+            fullWidth
+            onChange={(event: any) => setName(event.target.value)}
+          ></CustomTextField>
+        </FormControl>
 
-      <CustomTextField
-        id='password'
-        // label='password'
-        placeholder='password'
-        color='secondary'
-        value={password}
-        type='password'
-        InputLabelProps={{
-          shrink: true
-        }}
-        // variant='filled'
-        className='w-full mt-40'
-        onChange={(event: any) => setPassword(event.target.value)}
-      />
-      <Button onClick={handleLogin} size='large' color='secondary' variant='contained' sx={{ borderRadius: '12px' }}>
-        Login
-      </Button>
-      <h4 className='-mt-4 font-sm text-primary-text'>
-        Don't have a account?
-        <Button color='secondary' onClick={() => onJump()}>
-          Sign Up
+        <FormControl sx={{ width: '100%', mb: 3 }}>
+          <CustomTextField
+            id='password'
+            placeholder='password'
+            color='secondary'
+            value={password}
+            type='password'
+            InputLabelProps={{
+              shrink: true
+            }}
+            // variant='filled'
+            className='w-full mt-40'
+            required
+            onChange={(event: any) => setPassword(event.target.value)}
+          />
+        </FormControl>
+
+        <Button size='large' type='submit' variant='contained' sx={{ borderRadius: '12px', width: '100%' }}>
+          Login
         </Button>
+      </form>
+
+      <h4 className='-mt-4 font-sm text-primary-text'>
+        Don&apos;t have a account?
+        <Button onClick={() => onJump()}>Sign Up</Button>
       </h4>
     </div>
   );

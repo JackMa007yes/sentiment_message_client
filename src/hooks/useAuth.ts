@@ -4,8 +4,7 @@ import { useStore } from '@/store';
 
 export const useAuth = () => {
   const Navigator = useNavigate();
-  const hasLogin = useStore(state => state.hasLogin);
-  const setLogin = useStore(state => state.setLogin);
+  const { hasLogin, setLogin } = useStore(state => state);
 
   const logout = () => {
     setLogin(false);
@@ -13,5 +12,5 @@ export const useAuth = () => {
     Navigator('/');
   };
 
-  return [hasLogin, logout];
+  return { hasAuth: hasLogin, logout };
 };

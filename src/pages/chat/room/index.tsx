@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { SentimentController, SentimentScore } from '@/utils/video/sentimentController';
 import { useQuery } from '@tanstack/react-query';
 import { GetRoomMessage } from '@/api';
@@ -8,19 +8,18 @@ import MessagePopup from './MessagePopup';
 import { MaleVideoSource } from '@/constants/video';
 import { IconButton } from '@mui/material';
 import { MoreHoriz } from '@mui/icons-material';
+import Avatar from '@/components/ui/Avatar';
 
 type Props = {
-  session: Session | null;
   onSend: (message: any) => void;
   socketMessageList: IMessage[];
 };
-export default function Room({ session, onSend, socketMessageList }: Props) {
-  const user = useStore(state => state.user);
+function Room({ onSend, socketMessageList }: Props) {
+  const { profile, session } = useStore(state => state);
   const [limit, setLimit] = useState(20);
   const [page, setPage] = useState(1);
   const [messageHistory, setMessageHistory] = useState<any>([]);
   const [inEditMessage, setInEditMessage] = useState<string>('');
-  const messageRef = useRef<any[]>([]);
   const messageBoxRef = useRef(null);
 
   const videoController = useRef<SentimentController | null>(null);
@@ -45,7 +44,7 @@ export default function Room({ session, onSend, socketMessageList }: Props) {
     }
 
     const lastReceiveMessage = [...messageHistory, ...socketMessageList].reverse().find(message => {
-      return message.userId !== user?.id;
+      return message.userId !== profile?.id;
     });
     if (lastReceiveMessage) {
       const score = String(lastReceiveMessage.sentiment_score) as SentimentScore;
@@ -54,7 +53,7 @@ export default function Room({ session, onSend, socketMessageList }: Props) {
   }, [socketMessageList, messageHistory]);
 
   useEffect(() => {
-    videoController.current = new SentimentController(videoRomRef.current!, MaleVideoSource.SentimentMap);
+    videoController.current = new SentimentController(videoRomRef.current!, MaleVideoSource.SentimentClipMap);
     videoController.current.trigger(SentimentScore.peaceful);
   }, []);
 
@@ -71,12 +70,16 @@ export default function Room({ session, onSend, socketMessageList }: Props) {
     setInEditMessage('');
   };
 
-  console.log(socketMessageList, 5555);
-
   return (
     <div className='mr-8 my-10 rounded-t-[24px] flex-1 h-[calc(100vh-30px)] pb-8 flex rounde flex-col overflow-hidden bg-[#1d1e24]'>
-      <section className='text-white text-xl h-16 font-bold px-8 flex items-center justify-between bg-[#16171b]'>
-        <span>{session?.toUser.name}</span>
+      <section className='text-white text-xl h-20 font-bold px-8 flex items-center justify-between bg-[#16171b]'>
+        <span className='flex justify-start items-center gap-4'>
+          <Avatar
+            user={session?.toUser || null}
+            className='w-12 g-12 rounded-[50%] overflow-hidden inline-block'
+          ></Avatar>
+          {session?.toUser.name}
+        </span>
         <IconButton aria-label='delete' color='primary'>
           <MoreHoriz sx={{ color: 'white' }} />
         </IconButton>
@@ -84,14 +87,15 @@ export default function Room({ session, onSend, socketMessageList }: Props) {
       <section className='w-full flex-1 flex justify-between flex-col'>
         <section className='flex-1 relative p-8'>
           <div className='w-full h-full overflow-auto absolute left-0 top-0 flex justify-center items-center mix-blend-screen'>
-            <video ref={videoRomRef} className='' src={MaleVideoSource.video} muted={true}></video>
+            <video ref={videoRomRef} src={MaleVideoSource.video} muted={true}></video>
+            {/* <video ref={videoRomRef} className='' muted={true}></video> */}
           </div>
-          <div className='w-full h-full overflow-auto absolute left-0 top-0 px-6 p-2' ref={messageBoxRef}>
+          <div className='w-full h-full overflow-auto absolute left-0 top-0 px-10 p-4' ref={messageBoxRef}>
             {[...messageHistory, ...socketMessageList].map((item: IMessage) => {
               return (
                 <MessagePopup
                   data={item}
-                  user={item.userId === user?.id ? session?.fromUser : session?.toUser}
+                  user={item.userId === profile?.id ? session?.fromUser : session?.toUser}
                   key={item.id}
                 ></MessagePopup>
               );
@@ -103,3 +107,5 @@ export default function Room({ session, onSend, socketMessageList }: Props) {
     </div>
   );
 }
+
+export default memo(Room);

@@ -13,10 +13,12 @@ const StyledTextField = styled(TextField)<TextFieldProps>(({ theme }) => ({
   '& input': {
     color: 'white',
     backgroundColor: '#16171b',
-    borderRadius: '16px'
+    borderRadius: '16px',
+    boxShadow: '0 0 0 100px #16171b inset !important'
   },
   '& fieldset': {
-    borderRadius: '16px'
+    borderRadius: '16px',
+    borderColor: '#16171b'
   }
 }));
 

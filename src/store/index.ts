@@ -3,17 +3,26 @@ import storage from '@/utils/storage';
 
 type State = {
   hasLogin: boolean;
-  user: Profile | null;
+  profile: Profile | null;
+  session: Session | null;
+  sessionList: Session[];
 };
 
 type Action = {
   setLogin: (firstName: State['hasLogin']) => void;
-  setUser: (lastName: State['user']) => void;
+  setProfile: (lastName: State['profile']) => void;
+  setSession: (session: Session) => void;
+  setSessionList: (sessionList: Session[]) => void;
 };
 
 export const useStore = create<State & Action>(set => ({
   hasLogin: !!storage.getToken()?.token,
-  user: null,
-  setLogin: hasLogin => set(() => ({ hasLogin: hasLogin })),
-  setUser: user => set(() => ({ user: user }))
+  profile: null,
+  session: null,
+  sessionList: [],
+
+  setLogin: hasLogin => set(() => ({ hasLogin })),
+  setProfile: profile => set(() => ({ profile })),
+  setSession: session => set(() => ({ session })),
+  setSessionList: sessionList => set(() => ({ sessionList }))
 }));

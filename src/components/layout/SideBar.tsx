@@ -1,12 +1,9 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import GroupAddOutlinedIcon from '@mui/icons-material/GroupAddOutlined';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import Avatar from '../../pages/users/Avatar';
-import { useStore } from '@/store';
-import { IconButton } from '@mui/material';
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import ProfileCard from './ProfileCard';
 
 enum MenuItemEnum {
   Chat = 'Chat',
@@ -45,12 +42,11 @@ const menuItemStyleMap = {
 
 export default function SideBar() {
   const [curMenuItemName, setCurMenuItemName] = useState(getNameByPath());
-  const user = useStore(state => state.user);
-  const Navigater = useNavigate();
+  const navigator = useNavigate();
 
   const handleClick = (item: MenuItemType) => {
     setCurMenuItemName(item.name);
-    Navigater(item.path);
+    navigator(item.path);
   };
 
   function getNameByPath() {
@@ -58,7 +54,7 @@ export default function SideBar() {
   }
 
   return (
-    <div className='w-52 h-screen bg-[#000000] px-4 py-10 text-white flex flex-col justify-between items-start'>
+    <div className='w-52 h-screen bg-[#000000] px-4 pt-10 py-4 text-white flex flex-col justify-between items-start'>
       <section className='w-full'>
         {itemList.map(item => {
           return (
@@ -73,12 +69,7 @@ export default function SideBar() {
           );
         })}
       </section>
-      <section className='border-2 border-primary-color rounded-[44px] w-full p-4 flex justify-between'>
-        <Avatar user={user} className='w-14 h-14 rounded-[50%] overflow-hidden' />
-        <IconButton aria-label='delete' size='large'>
-          <LogoutRoundedIcon />
-        </IconButton>
-      </section>
+      <ProfileCard />
     </div>
   );
 }

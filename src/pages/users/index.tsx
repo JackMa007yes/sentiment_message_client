@@ -1,17 +1,16 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash-es';
+import { useSnackbar } from 'notistack';
 import { Pagination, createTheme } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
-import UserCard from './UserCard';
 import { useStore } from '@/store';
-import { RoomType } from '@/constants';
+import { RoomType } from '@/constants/common';
 import CustomTextField from '@/components/ui/CustomTextFiled';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
 import { CreateRoom, GetUserList } from '@/api';
-import { getBase64 } from '@/utils/avatar';
+import UserCard from './UserCard';
 
 const theme = createTheme({
   components: {
@@ -30,15 +29,14 @@ const theme = createTheme({
 });
 
 export default function index() {
-  const user = useStore(state => state.user);
+  const { profile, sessionList } = useStore(state => state);
   const { enqueueSnackbar } = useSnackbar();
 
   const [limit] = useState(12);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const [keywords, setKeywords] = useState('');
+  const [keyword, setKeyword] = useState('');
   const [userList, setUserList] = useState<User[]>([]);
-  const [selectedUserId, setSelectedUserId] = useState(0);
 
   const { mutate: createRoomMutate } = useMutation(['CreateRoom'], (data: CreateRoomParams) => CreateRoom(data), {
     onSuccess: () => {
@@ -46,17 +44,25 @@ export default function index() {
     }
   });
 
-  const handleSelected = (selectedUserId: number) => {
-    if (!user) return;
-    createRoomMutate({ type: RoomType.PERSONAL, users: [selectedUserId, user.id] });
-  };
+  const handleSelected = useCallback(
+    (selectedUserId: number) => {
+      if (!profile) return;
+      createRoomMutate({ type: RoomType.PERSONAL, users: [selectedUserId, profile.id] });
+    },
+    [profile]
+  );
+
+  // const handleSelected = (selectedUserId: number) => {
+  //   if (!profile) return;
+  //   createRoomMutate({ type: RoomType.PERSONAL, users: [selectedUserId, profile.id] });
+  // };
 
   const handleInput = (e: any) => {
-    setKeywords(e.target.value);
+    setKeyword(e.target.value);
   };
   const debouncedHandleInput = debounce(handleInput, 300);
 
-  useQuery(['GetUserList', limit, page, keywords], () => GetUserList({ limit, page, keywords }), {
+  useQuery(['GetUserList', limit, page, keyword], () => GetUserList({ limit, page, keyword }), {
     onSuccess: data => {
       setUserList(data.data);
       setTotal(data.total);
@@ -81,12 +87,17 @@ export default function index() {
           />
         </section>
       </section>
+
       <section className='flex-1'>
         <section className='flex gap-6 flex-wrap '>
           {userList.map(item => {
             return (
               <section className='h-32 w-[calc(25%-20px)]' key={item.id}>
-                <UserCard user={item} onSelect={handleSelected} selected={item.id === selectedUserId} />
+                <UserCard
+                  user={item}
+                  onSelect={handleSelected}
+                  disabled={sessionList.some(session => session.toUser.id === item.id)}
+                />
               </section>
             );
           })}
