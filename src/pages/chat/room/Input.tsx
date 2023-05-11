@@ -1,35 +1,67 @@
+import { memo, useRef, useState } from 'react';
 import CustomTextField from '@/components/ui/CustomTextFiled';
-import { ArrowCircleRightRounded, ArrowUpwardOutlined } from '@mui/icons-material';
+import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
 import { IconButton } from '@mui/material';
-import { memo } from 'react';
+import EmojiPopover from './EmojiPopover';
 
 type Props = {
-  value: string;
-  onChange: (val: string) => void;
-  send: (val: string) => void;
+  onSend: (val: string) => void;
 };
-function Input({ value, onChange, send }: Props) {
+function Input({ onSend }: Props) {
+  const [message, setMessage] = useState('');
+  const [emojiPopoverDisplay, setEmojiPopoverDisplay] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const anchorElRef = useRef<HTMLInputElement>(null);
+
+  const handleClick = (e: any) => {
+    e.stopPropagation();
+    setEmojiPopoverDisplay(true);
+  };
+
+  const handleEmojiSelect = (emojiObj: any) => {
+    const inputEl = inputRef.current;
+    if (inputEl) {
+      const tokenArr = message.split('');
+      tokenArr.splice(inputRef.current?.selectionStart || tokenArr.length, 0, emojiObj.native);
+    } else {
+      // Noop
+    }
+  };
+
+  const handleSend = () => {
+    if (!message) return;
+    onSend(message);
+    setMessage('');
+  };
+
   return (
     <div className='py-0 px-4 relative'>
       <CustomTextField
         fullWidth
         placeholder='Send your message'
-        value={value}
+        value={message}
         multiline
         maxRows={4}
         minRows={3}
-        onChange={(e: any) => onChange(e.target.value)}
+        onChange={(e: any) => setMessage(e.target.value)}
         onKeyPress={(e: any) => {
           if (e.key === 'Enter') {
-            send(e.target.value);
+            handleSend();
           }
         }}
         autoFocus
+        inputRef={inputRef}
         InputProps={{ style: { paddingRight: '50px' } }}
       ></CustomTextField>
-      <section className='absolute right-5 top-1'>
-        <IconButton color='primary' aria-label='add an alarm'>
-          <ArrowCircleRightRounded sx={{ transform: 'rotate(-90deg)', marginTop: '-2px' }} fontSize='large' />
+      <section className='absolute right-5 top-1' ref={anchorElRef}>
+        <EmojiPopover
+          open={emojiPopoverDisplay}
+          anchorEl={anchorElRef.current}
+          onEmojiSelect={handleEmojiSelect}
+          onClose={() => setEmojiPopoverDisplay(false)}
+        />
+        <IconButton color='primary' onClick={handleClick}>
+          <SentimentSatisfiedOutlinedIcon sx={{ marginTop: '-2px' }} fontSize='large' />
         </IconButton>
       </section>
     </div>

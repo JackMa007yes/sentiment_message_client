@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { checkSessionMessage } from '@/api';
 import { useStore } from '@/store';
@@ -22,9 +22,9 @@ export default function index() {
   }, [session]);
 
   return (
-    <section className='flex justify-between bg-primary-bg'>
+    <div className='flex justify-between bg-primary-bg'>
       <SessionBar updatedSession={updatedSessionMap} />
       <Room onSend={seedMessage} socketMessageList={socketMessageList} />
-    </section>
+    </div>
   );
 }

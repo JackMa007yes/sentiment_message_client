@@ -13,6 +13,7 @@ type Action = {
   setProfile: (lastName: State['profile']) => void;
   setSession: (session: Session) => void;
   setSessionList: (sessionList: Session[]) => void;
+  restore: () => void;
 };
 
 export const useStore = create<State & Action>(set => ({
@@ -24,5 +25,6 @@ export const useStore = create<State & Action>(set => ({
   setLogin: hasLogin => set(() => ({ hasLogin })),
   setProfile: profile => set(() => ({ profile })),
   setSession: session => set(() => ({ session })),
-  setSessionList: sessionList => set(() => ({ sessionList }))
+  setSessionList: sessionList => set(() => ({ sessionList })),
+  restore: () => set(() => ({ hasLogin: false, profile: null, session: null, sessionList: [] }))
 }));

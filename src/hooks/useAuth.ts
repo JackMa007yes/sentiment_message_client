@@ -4,10 +4,10 @@ import { useStore } from '@/store';
 
 export const useAuth = () => {
   const Navigator = useNavigate();
-  const { hasLogin, setLogin } = useStore(state => state);
+  const { hasLogin, restore } = useStore(state => state);
 
   const logout = () => {
-    setLogin(false);
+    restore();
     storage.clearToken();
     Navigator('/');
   };
