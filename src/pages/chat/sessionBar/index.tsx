@@ -16,18 +16,6 @@ function SessionBar({ updatedSession }: Props) {
   const [searchWord, setSearchWord] = useState('');
   const [filterSessionList, setFilterSessionList] = useState<Session[]>([]);
 
-  useQuery(['GetSessionList'], () => GetSessionList(), {
-    initialData: [],
-    onSuccess(data) {
-      const res = data.sort(
-        (pre, cur) =>
-          new Date(cur.lastMessageTime || cur.createTime).getTime() -
-          new Date(pre.lastMessageTime || pre.createTime).getTime()
-      );
-      setSessionList(res);
-    }
-  });
-
   const checkMessage = (session: Session) => {
     const newSessionList = sessionList.map(item => {
       return item.id === session.id ? { ...item, unreadCount: 0 } : item;

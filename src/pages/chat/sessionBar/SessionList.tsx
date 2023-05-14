@@ -6,10 +6,14 @@ type Props = {
   onSelect: (selected: Session) => void;
 };
 export default function SessionList({ data, current, onSelect }: Props) {
+  const handleSelect = (session: Session) => {
+    if (session.id !== current?.id) onSelect(session);
+  };
+
   return (
-    <div className='py-6 overflow-auto scroll-smooth scroll-p-0 h-[800px]'>
+    <div className='py-6 overflow-auto scroll-smooth scroll-p-0 h-[calc(100vh-110px)]'>
       {data.map(item => {
-        return <SessionCard key={item.id} data={item} selected={current?.id === item.id} onSelect={onSelect} />;
+        return <SessionCard key={item.id} data={item} selected={current?.id === item.id} onSelect={handleSelect} />;
       })}
     </div>
   );

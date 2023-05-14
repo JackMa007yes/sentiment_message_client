@@ -22,14 +22,20 @@ function Input({ onSend }: Props) {
     const inputEl = inputRef.current;
     if (inputEl) {
       const tokenArr = message.split('');
-      tokenArr.splice(inputRef.current?.selectionStart || tokenArr.length, 0, emojiObj.native);
+      const start = inputRef.current?.selectionStart || tokenArr.length;
+      tokenArr.splice(start, 0, emojiObj.native);
+      setMessage(tokenArr.join(''));
+
+      setTimeout(() => {
+        inputEl.selectionStart = start + emojiObj.native.length;
+      }, 0);
     } else {
       // Noop
     }
   };
 
   const handleSend = () => {
-    if (!message) return;
+    if (!message.trim()) return;
     onSend(message);
     setMessage('');
   };

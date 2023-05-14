@@ -23,13 +23,16 @@ http.interceptors.response.use(
   },
   function (error) {
     if (error.response) {
+      const message = error.response.data.message;
       switch (error.response.status) {
         case 401:
           storage.clearToken();
           if (location.href !== 'login') window.location.href = '/';
           break;
         default:
-          enqueueSnackbar(error.response.data.message, { variant: 'error' });
+          enqueueSnackbar(Array.isArray(message) ? message.join('|') : message, {
+            variant: 'error'
+          });
           break;
       }
     } else {
