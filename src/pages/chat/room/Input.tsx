@@ -44,9 +44,19 @@ function Input({ onSend }: Props) {
         maxRows={4}
         minRows={3}
         onChange={(e: any) => setMessage(e.target.value)}
-        onKeyPress={(e: any) => {
-          if (e.key === 'Enter') {
+        onKeyPress={(e: KeyboardEvent) => {
+          const { shiftKey, key } = e;
+          const isEnter = key === 'Enter';
+          /** 不改变message值 */
+          const notChangeMsg = () => e.preventDefault();
+
+          if (shiftKey && isEnter) {
+            // shift + enter 输入换行
+            setMessage(message + '\n');
+            notChangeMsg();
+          } else if (isEnter) {
             handleSend();
+            notChangeMsg();
           }
         }}
         autoFocus
