@@ -15,10 +15,10 @@ export default function AvatarSetting() {
   });
 
   const beforeUpload = (file: any) => {
-    const isPng = file.type === 'image/png';
+    const typeIsAvailable = file.type === 'image/png' || file.type === 'image/jpg' || file.type === 'image/jpeg';
 
-    if (!isPng) {
-      enqueueSnackbar('Only PNG images are supported', { variant: 'error' });
+    if (!typeIsAvailable) {
+      enqueueSnackbar('The picture must be in JPG/JPEG/PNG format', { variant: 'error' });
     }
 
     const isLt2M = file.size / 1024 / 1024 < 2;
@@ -27,7 +27,7 @@ export default function AvatarSetting() {
       enqueueSnackbar('The image must be smaller than 2m', { variant: 'error' });
     }
 
-    return isPng && isLt2M;
+    return typeIsAvailable && isLt2M;
   };
 
   const props = {

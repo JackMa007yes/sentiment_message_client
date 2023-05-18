@@ -5,24 +5,26 @@ import TopBar from './TopBar';
 import Messages from './Messages';
 import Input from './Input';
 import Memoji from './Memoji';
+import { MessageType } from '@/constants';
 
-type Props = {
-  onSend: (message: any) => void;
-  socketMessageList: IMessage[];
-};
-function Room({ onSend, socketMessageList }: Props) {
-  const { session } = useStore(state => state);
-  const [memojiDisplay, setMemojiDisplay] = useState(false);
+function Room() {
+  const { session, socketMessageList, client } = useStore(state => state);
+  const [memojiDisplay, setMemojiDisplay] = useState(true);
   const [sentimentScore, setSentimentScore] = useState<SentimentScore>(SentimentScore.peaceful);
 
-  const sendMessage = (val: string) => {
-    onSend({
+  const sendMessage = (message: { type: MessageType; val: string }) => {
+    client?.emit('message', {
       type: 'addMessage',
-      payload: {
-        roomId: session?.room.id,
-        userId: session?.fromUser.id,
-        message: val
-      }
+      payload: Object.assign(
+        { roomId: session?.room.id, userId: session?.fromUser.id, type: message.type },
+        message.type === MessageType.TEXT
+          ? {
+              message: message.val
+            }
+          : {
+              imageUrl: message.val
+            }
+      )
     });
   };
 
@@ -33,7 +35,8 @@ function Room({ onSend, socketMessageList }: Props) {
           open: memojiDisplay,
           onToggle: setMemojiDisplay
         }}
-        moreClick={console.log}
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        moreClick={() => {}}
       />
       <section className='flex-1 relative p-8'>
         <Memoji open={memojiDisplay} score={sentimentScore} />

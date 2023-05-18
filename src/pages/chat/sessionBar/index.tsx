@@ -1,18 +1,15 @@
-import { memo, useEffect, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState, memo } from 'react';
 import { debounce } from 'lodash-es';
-import { GetSessionList } from '@/api';
+import { useMutation } from '@tanstack/react-query';
 import { useStore } from '@/store';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
+import { checkSessionMessage } from '@/api';
 import CustomTextField from '@/components/ui/CustomTextFiled';
 import SessionList from './SessionList';
 
-type Props = {
-  updatedSession: Record<string, SessionBase>;
-};
-function SessionBar({ updatedSession }: Props) {
-  const { session, sessionList, setSession, setSessionList } = useStore(state => state);
+function SessionBar() {
+  const { client, session, sessionList, setSession, setSessionList, updatedSessionMap } = useStore(state => state);
   const [searchWord, setSearchWord] = useState('');
   const [filterSessionList, setFilterSessionList] = useState<Session[]>([]);
 
@@ -23,22 +20,14 @@ function SessionBar({ updatedSession }: Props) {
     setSessionList(newSessionList);
   };
 
-  const mergeSessionList = (updatedSession: Record<string, SessionBase>) => {
-    const newSessionList = sessionList.map(session => {
-      const newSession = updatedSession[session.id];
-      if (newSession) {
-        return {
-          ...session,
-          ...newSession
-        };
-      } else {
-        return session;
-      }
-    });
-    return newSessionList;
-  };
-
   const debouncedHandleInput = debounce(setSearchWord, 300);
+
+  const { mutateAsync: checkMessageMutate } = useMutation(['checkSessionMessage'], checkSessionMessage);
+
+  useEffect(() => {
+    session && client?.emit('joinRoom', { userId: session.fromUser.id, roomId: session.room.id });
+    session && session.unreadCount && checkMessageMutate(session.id);
+  }, [session]);
 
   useEffect(() => {
     setFilterSessionList(
@@ -46,12 +35,8 @@ function SessionBar({ updatedSession }: Props) {
     );
   }, [searchWord, sessionList]);
 
-  useEffect(() => {
-    setSessionList(mergeSessionList(updatedSession));
-  }, [updatedSession]);
-
   return (
-    <div className='text-white w-[400px] h-screen py-10 px-8'>
+    <div className='text-white w-[370px] h-screen py-10 px-8'>
       <CustomTextField
         fullWidth
         placeholder='Search User'

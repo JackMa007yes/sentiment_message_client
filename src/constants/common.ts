@@ -7,3 +7,8 @@ export const enum GenderEnum {
   male,
   female
 }
+
+export enum MessageType {
+  TEXT,
+  IMAGE
+}

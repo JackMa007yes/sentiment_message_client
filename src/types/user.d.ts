@@ -18,10 +18,7 @@ declare global {
     name: string;
     desc: string;
     gender: 0 | 1;
-    avatar?: {
-      type: string;
-      data: number[];
-    };
+    avatar?: string;
   }
 
   type Profile = User;

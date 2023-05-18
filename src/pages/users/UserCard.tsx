@@ -19,8 +19,8 @@ function UserCard({ user, disabled, onSelect }: Props) {
       <section className='text-xl text-white flex-1'>
         <section className='flex items-center mb-5 mt-2'>
           <span className='text-xl overflow-hidden whitespace-nowrap text-ellipsis'>{user.name}</span>
-          <span className={`${user.gender ? 'text-blue-400' : 'text-red-400'} h-8 ml-4`}>
-            {user.gender ? <MaleSharpIcon /> : <FemaleSharpIcon />}
+          <span className={`${!user.gender ? 'text-blue-400' : 'text-red-400'} h-8 ml-4`}>
+            {!user.gender ? <MaleSharpIcon /> : <FemaleSharpIcon />}
           </span>
         </section>
         <section className='text-xs text-gray-400  h-8 line-clamp-2'>

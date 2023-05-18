@@ -1,6 +1,6 @@
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
-export const SOCKET_URL = 'http://localhost:3000';
+export const DEV_SOCKET_URL = 'http://localhost:3000';
 
 export const enum ClientToServerEventsEnum {
   MESSAGE = 'message',

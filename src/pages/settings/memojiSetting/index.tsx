@@ -1,4 +1,3 @@
-import React from 'react';
 import girl1 from '@/assets/img/girl_1.jpg';
 import boy1 from '@/assets/img/boy_1.jpg';
 import boy2 from '@/assets/img/boy_2.jpg';
@@ -39,12 +38,12 @@ export default function memojiSetting() {
               key={item.value}
               className='w-32 h-32 overflow-hidden border-primary-text rounded-2xl border-2 cursor-pointer flex justify-center items-center mb-6 bg-[#1c1c1e]'
             >
-              <img src={item.img} className='w-24 hover:scale-105'></img>
+              <img src={item.img} alt='' className='w-24 hover:scale-105'></img>
             </div>
           );
         })}
       </section>
-      <section className='mix-blend-screen flex-1 flex justify-center h-[calc(60vh)]'>
+      <section className='bg-black flex-1 flex justify-center h-[calc(60vh)]'>
         <video src={maleVideo} autoPlay muted></video>
       </section>
       <Button variant='outlined'>Confirm</Button>

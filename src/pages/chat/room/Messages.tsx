@@ -62,9 +62,7 @@ function Messages({ socketMessage, onSentimentScoreChange }: Props) {
       return message.userId !== profile?.id;
     });
 
-    return lastReceiveMessage
-      ? (String(lastReceiveMessage.sentiment_score) as SentimentScore)
-      : SentimentScore.peaceful;
+    return lastReceiveMessage ? (String(lastReceiveMessage.sentimentScore) as SentimentScore) : SentimentScore.peaceful;
   };
 
   const reachTopEvent = () => {

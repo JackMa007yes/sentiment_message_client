@@ -11,7 +11,7 @@ export default function SessionList({ data, current, onSelect }: Props) {
   };
 
   return (
-    <div className='py-6 overflow-auto scroll-smooth scroll-p-0 h-[calc(100vh-110px)]'>
+    <div className='py-6 overflow-auto scroll-smooth scroll-p-0 h-[800px]'>
       {data.map(item => {
         return <SessionCard key={item.id} data={item} selected={current?.id === item.id} onSelect={handleSelect} />;
       })}

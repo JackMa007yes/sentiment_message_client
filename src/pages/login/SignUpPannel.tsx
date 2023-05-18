@@ -19,6 +19,7 @@ export default function SignUpPannel({ onJump }: Props) {
   const { mutateAsync } = useMutation(['Register'], Register, {
     onSuccess: () => {
       enqueueSnackbar('Registration success', { variant: 'success' });
+      onJump();
     }
   });
 

@@ -22,7 +22,7 @@ const TopBar = ({ memoji, moreClick }: Props) => {
       <span className='flex justify-start items-center gap-4'>
         <Avatar
           user={session?.toUser || null}
-          className='w-12 g-12 rounded-[50%] overflow-hidden inline-block'
+          className='w-12 h-12 rounded-[50%] overflow-hidden inline-block'
         ></Avatar>
         {session?.toUser.name}
       </span>

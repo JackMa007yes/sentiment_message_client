@@ -1,3 +1,4 @@
+import { MessageType } from './../constants/common';
 import { RoomType } from '@/constants/common';
 
 declare global {
@@ -15,10 +16,12 @@ declare global {
 
   interface IMessage {
     id: number;
+    type: MessageType;
     userId: number;
     message: string;
+    imageUrl: string;
     roomId: number;
-    sentiment_score: number;
+    sentimentScore: number;
     createdAt: string;
   }
 }

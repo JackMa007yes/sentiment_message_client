@@ -1,0 +1,7 @@
+#nprogress .spinner {
+  display: none !important;
+}
+
+#nprogress .bar {
+  background-color: #872bab !important;
+}

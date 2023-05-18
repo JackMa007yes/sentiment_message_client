@@ -1,21 +1,31 @@
+import { useStore } from '@/store';
 import { useState, useEffect } from 'react';
 import { Socket } from 'socket.io';
 import { io } from 'socket.io-client';
 import storage from '@/utils/storage';
-import { ServerToClientEvents, ClientToServerEvents, SOCKET_URL } from '@/constants/socket';
+import { ServerToClientEvents, ClientToServerEvents, DEV_SOCKET_URL } from '@/constants/socket';
 
-export const useSocket = (session: Session | null) => {
-  const [client, setClient] = useState<Socket<ServerToClientEvents, ClientToServerEvents> | null>(null);
+export const useSocket = () => {
+  const {
+    session,
+    client,
+    setClient,
+    sessionList,
+    setSessionList,
+    socketMessageList,
+    setSocketMessageList,
+    updateSocketMessageList,
+    updatedSessionMap,
+    setUpdatedSessionMap
+  } = useStore(state => state);
   const [isConnected, setIsConnected] = useState(false);
-  const [socketMessageList, setSocketMessageList] = useState<IMessage[]>([]);
-  const [updatedSessionMap, setUpdatedSessionMap] = useState<Record<string, SessionBase>>({});
 
   useEffect(() => {
-    const socket = io(SOCKET_URL, {
+    const socket = io(import.meta.env.MODE === 'development' ? DEV_SOCKET_URL : '/', {
       query: {
         token: storage.getToken()?.token
       }
-    }) as unknown as Socket<ServerToClientEvents, ServerToClientEvents>;
+    }) as unknown as Socket<ServerToClientEvents, ClientToServerEvents>;
 
     function onConnect() {
       setIsConnected(true);
@@ -26,12 +36,11 @@ export const useSocket = (session: Session | null) => {
     }
 
     function onMessageEvent(value: any) {
-      setSocketMessageList(previous => [...previous, value.payload]);
+      updateSocketMessageList([value.payload]);
     }
 
     function onSessionEvent(value: any) {
-      console.log(9999);
-      setUpdatedSessionMap(previous => ({ ...previous, [value.payload.id]: value.payload }));
+      setUpdatedSessionMap(Object.assign({}, { ...updatedSessionMap, [value.payload.id]: value.payload }));
     }
 
     socket.on('connect', onConnect);
@@ -52,6 +61,25 @@ export const useSocket = (session: Session | null) => {
   useEffect(() => {
     setSocketMessageList([]);
   }, [session]);
+
+  const mergeSessionList = (updatedSession: Record<string, SessionBase>) => {
+    const newSessionList = sessionList.map(session => {
+      const newSession = updatedSession[session.id];
+      if (newSession) {
+        return {
+          ...session,
+          ...newSession
+        };
+      } else {
+        return session;
+      }
+    });
+    return newSessionList;
+  };
+
+  useEffect(() => {
+    setSessionList(mergeSessionList(updatedSessionMap));
+  }, [updatedSessionMap]);
 
   return { client, isConnected, socketMessageList, updatedSessionMap };
 };

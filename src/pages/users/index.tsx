@@ -9,7 +9,7 @@ import { RoomType } from '@/constants/common';
 import CustomTextField from '@/components/ui/CustomTextFiled';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-import { CreateRoom, GetUserList } from '@/api';
+import { CreateRoom, GetSessionList, GetUserList } from '@/api';
 import UserCard from './UserCard';
 
 const theme = createTheme({
@@ -29,7 +29,7 @@ const theme = createTheme({
 });
 
 export default function index() {
-  const { profile, sessionList } = useStore(state => state);
+  const { profile, sessionList, setSessionList, setUpdatedSessionMap } = useStore(state => state);
   const { enqueueSnackbar } = useSnackbar();
 
   const [limit] = useState(12);
@@ -38,9 +38,23 @@ export default function index() {
   const [keyword, setKeyword] = useState('');
   const [userList, setUserList] = useState<User[]>([]);
 
+  const { refetch } = useQuery(['GetSessionList'], () => GetSessionList(), {
+    initialData: [],
+    onSuccess(data) {
+      const res = data.sort(
+        (pre, cur) =>
+          new Date(cur.lastMessageTime || cur.createTime).getTime() -
+          new Date(pre.lastMessageTime || pre.createTime).getTime()
+      );
+      setUpdatedSessionMap({});
+      setSessionList(res);
+    }
+  });
+
   const { mutate: createRoomMutate } = useMutation(['CreateRoom'], (data: CreateRoomParams) => CreateRoom(data), {
     onSuccess: () => {
       enqueueSnackbar('Add new user successfully!', { variant: 'success' });
+      refetch();
     }
   });
 
@@ -51,11 +65,6 @@ export default function index() {
     },
     [profile]
   );
-
-  // const handleSelected = (selectedUserId: number) => {
-  //   if (!profile) return;
-  //   createRoomMutate({ type: RoomType.PERSONAL, users: [selectedUserId, profile.id] });
-  // };
 
   const handleInput = (e: any) => {
     setKeyword(e.target.value);
@@ -96,7 +105,7 @@ export default function index() {
                 <UserCard
                   user={item}
                   onSelect={handleSelected}
-                  disabled={sessionList.some(session => session.toUser.id === item.id)}
+                  disabled={sessionList.some(session => session.toUser.id === item.id) || profile?.id === item.id}
                 />
               </section>
             );

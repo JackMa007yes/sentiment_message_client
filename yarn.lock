@@ -750,6 +750,11 @@
   resolved "https://registry.npmmirror.com/@types/node/-/node-18.16.9.tgz#e79416d778a8714597342bb87efb5a6e914f7a73"
   integrity sha512-IeB32oIV4oGArLrd7znD2rkHQ6EDCM+2Sr76dJnrHwv9OHBTTM6nuDLK9bmikXzPa0ZlWMWtRGo/Uw4mrzQedA==
 
+"@types/nprogress@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.npmmirror.com/@types/nprogress/-/nprogress-0.2.0.tgz#86c593682d4199212a0509cc3c4d562bbbd6e45f"
+  integrity sha512-1cYJrqq9GezNFPsWTZpFut/d4CjpZqA0vhqDUPFWYKF1oIyBz5qnoYMzR+0C/T96t3ebLAC1SSnwrVOm5/j74A==
+
 "@types/parse-json@^4.0.0":
   version "4.0.0"
   resolved "https://registry.npmmirror.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
@@ -1334,6 +1339,13 @@ csstype@^3.0.2, csstype@^3.0.6, csstype@^3.1.2:
   version "3.1.2"
   resolved "https://registry.npmmirror.com/csstype/-/csstype-3.1.2.tgz#1d4bf9d572f11c14031f0436e1c10bc1f571f50b"
   integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
+
+data-fns@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/data-fns/-/data-fns-1.1.0.tgz#6d8ce54401dfcff8016b9556718ca2268484c06b"
+  integrity sha512-/rJzdbnuY3DVgzqsfEfc+tJLuAKYaHzkUxSMRIU3dxKFeWGD/MGhrgAfuwSOmgfJ8enygztp9DeuvoSxauppIg==
+  dependencies:
+    unit-fns "^0.1.6"
 
 date-fns@^2.30.0:
   version "2.30.0"
@@ -2498,6 +2510,11 @@ notistack@^3.0.1:
     clsx "^1.1.0"
     goober "^2.0.33"
 
+nprogress@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmmirror.com/nprogress/-/nprogress-0.2.0.tgz#cb8f34c53213d895723fcbab907e9422adbcafb1"
+  integrity sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==
+
 object-assign@^4, object-assign@^4.0.1, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.npmmirror.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
@@ -3352,6 +3369,11 @@ unbox-primitive@^1.0.2:
     has-symbols "^1.0.3"
     which-boxed-primitive "^1.0.2"
 
+unit-fns@^0.1.6:
+  version "0.1.9"
+  resolved "https://registry.npmmirror.com/unit-fns/-/unit-fns-0.1.9.tgz#975f20a779cbd7a0ec9eeb3efde5c572534f7edb"
+  integrity sha512-bxceIkc7n2icQmgQx8u3vX98ZBIcpL2YJDKIsWDFK7ZX1TTuLvtNWVNd9/oARCDHd7QQRzwc+zxabO0HSK8X0w==
+
 update-browserslist-db@^1.0.10:
   version "1.0.11"
   resolved "https://registry.npmmirror.com/update-browserslist-db/-/update-browserslist-db-1.0.11.tgz#9a2a641ad2907ae7b3616506f4b977851db5b940"
@@ -3381,6 +3403,11 @@ vary@^1:
   version "1.1.2"
   resolved "https://registry.npmmirror.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
+
+viewerjs@^1.11.3:
+  version "1.11.3"
+  resolved "https://registry.npmmirror.com/viewerjs/-/viewerjs-1.11.3.tgz#6569c519590776190f86b531bf43a5888a7a472f"
+  integrity sha512-efG3U61Umuj/1x6JAtdvnY9m407C/RkrkFilsMcLEWKDivpjNU3/FeL+feCY1Vkur9aQeBJ+z6K4CCPP7hv6vA==
 
 vite@^4.2.0:
   version "4.3.5"
