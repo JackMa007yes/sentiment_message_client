@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { format } from 'date-fns';
 import Avatar from '@/components/ui/Avatar';
 import { Badge } from '@mui/material';
+import FormatedMsg from '@/components/layout/FormatedMsg';
 
 type Props = {
   data: Session;
@@ -25,7 +26,9 @@ function SessionCard({ data, selected, onSelect }: Props) {
           <span className='text-xs text-primary-text'>{format(new Date(data.lastMessageTime), 'hh:mm')}</span>
         </section>
         <section className='text-primary-text text-xs flex justify-between items-center '>
-          <span className='overflow-hidden whitespace-nowrap text-ellipsis w-40'>{data.lastMessage || ''}</span>
+          <span className='overflow-hidden line-clamp-1 w-40'>
+            <FormatedMsg msg={data.lastMessage} id={data.id}></FormatedMsg>
+          </span>
           {data.unreadCount ? (
             <Badge badgeContent={data.unreadCount} max={99} color='primary' sx={{ mr: 1 }}></Badge>
           ) : null}
