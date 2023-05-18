@@ -25,6 +25,8 @@ export class SentimentController extends VideoController {
   }
 
   trigger(score: SentimentScore) {
-    this.loop(this.fragmentMap[score]);
+    if (!Number.isNaN(Number(score))) {
+      this.loop(this.fragmentMap[score]);
+    }
   }
 }
