@@ -25,7 +25,7 @@ export default function MessagePopup({ data, user }: Props) {
   };
 
   return (
-    <div className={`mb-6 flex justify-end ${data.userId === profile?.id ? '' : 'flex-row-reverse'}`}>
+    <div className={`mb-6 flex justify-end ${isSelf ? '' : 'flex-row-reverse'}`}>
       <section
         className={`text-white leading-8 rounded-2xl max-w-[52%] break-words ${
           isSelf ? 'bg-[#b785f5]' : 'bg-[#2e343d]'
