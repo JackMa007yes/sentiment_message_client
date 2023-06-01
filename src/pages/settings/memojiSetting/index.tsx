@@ -43,7 +43,7 @@ export default function memojiSetting() {
   return (
     <div className={`my-8 overflow-hidden ${isPC ? 'h-[calc(100vh-100px)]' : 'h-[calc(100dvh-180px)]'}`}>
       <section className={`flex  ${isPC ? 'gap-6 h-[calc(100%-80px)]' : 'flex-col gap-4'}`}>
-        <section className={`overflow-auto h-full scroll-m-0 pr-4  ${isPC ? '' : 'flex gap-6'}`}>
+        <section className={`overflow-auto h-full scroll-m-0 pr-4  ${isPC ? 'flex-0' : 'flex gap-6'}`}>
           {MemojiList.map(item => {
             return (
               <div
@@ -63,8 +63,16 @@ export default function memojiSetting() {
             );
           })}
         </section>
-        <section className='bg-black  flex justify-center h-52'>
-          <video src={selected.video?.src || ''} autoPlay loop playsInline muted data-inline-media></video>
+        <section className={`bg-black flex flex-1 justify-center  ${isPC ? '' : 'h-52'}`}>
+          <video
+            src={selected.video?.src || ''}
+            autoPlay
+            loop
+            playsInline
+            muted
+            data-inline-media
+            className='flex-0'
+          ></video>
         </section>
       </section>
       <section className='mt-4 flex justify-end'>

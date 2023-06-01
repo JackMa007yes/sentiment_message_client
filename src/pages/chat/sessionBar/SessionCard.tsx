@@ -42,7 +42,7 @@ function SessionCard({ data, selected, onSelect }: Props) {
             vertical: 'bottom',
             horizontal: 'right'
           }}
-          color='error'
+          color={isPC ? 'error' : 'primary'}
         >
           <Avatar user={data.toUser} className={`rounded-[50%] overflow-hidden ${isPC ? 'w-14 h-14' : 'w-12 h-12'}`} />
         </Badge>

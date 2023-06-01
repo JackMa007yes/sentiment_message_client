@@ -15,6 +15,7 @@ export default function MobileChat() {
     //   </section>
     // </div>
     <div className='h-[100dvh] '>
+      {/* <h1 className='text-5xl text-white p-8 pb-0 -mb-2'>Chat</h1> */}
       <div className={`flex h-full w-[200vw] transition-all ${session ? '-ml-[100vw]' : ''}`}>
         <section className={`flex-0 w-screen pb-16 overflow-hidden h-full`}>
           <SessionBar />

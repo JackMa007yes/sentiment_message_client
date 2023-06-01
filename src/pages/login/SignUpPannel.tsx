@@ -38,8 +38,6 @@ export default function SignUpPannel({ onJump }: Props) {
 
   return (
     <div className='rounded-3xl flex flex-col gap-10 w-full'>
-      <h1 className='text-2xl'>Sign Up</h1>
-
       <form onSubmit={handleSubmit}>
         <FormControl sx={{ width: '100%', mb: 3 }}>
           <CustomTextField

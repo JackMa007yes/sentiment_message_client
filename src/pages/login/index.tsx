@@ -35,6 +35,7 @@ export default function LoginPage() {
         }  h-full bg-[#26282d] z-2 absolute left-0 top-0 border-red-300 flex items-center justify-center`}
       >
         <section className={`${isPC ? 'w-1/2' : 'w-3/4'}`}>
+          <section className='text-4xl mb-10 font-bold leading-relaxed'>Welcome to Sentiment Chat👋</section>
           {curPannel === PannelType.LOGIN ? (
             <LoginPannel onJump={() => setCurPannel(PannelType.SIGNUP)} />
           ) : (
