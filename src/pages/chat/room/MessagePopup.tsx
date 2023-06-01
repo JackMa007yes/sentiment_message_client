@@ -1,10 +1,6 @@
 import { useStore } from '@/store';
-import { useRef } from 'react';
-import Viewer from 'viewerjs';
 import Avatar from '@/components/ui/Avatar';
-import { MessageType } from '@/constants';
-import { getImageUrl } from '@/utils/image';
-import FormatedMessage from '@/components/ui/FormatedMsg';
+import FormatedMsg from '@/components/ui/formatedMsg';
 
 type Props = {
   data: IMessage;
@@ -13,16 +9,8 @@ type Props = {
 
 export default function MessagePopup({ data, user }: Props) {
   const profile = useStore(state => state.profile);
-  const viewInstanceRef = useRef<any>(null);
 
   const isSelf = data.userId === profile?.id;
-
-  const viewImage = (id: string) => {
-    const El = document.getElementById(id);
-    if (El) {
-      viewInstanceRef.current = new Viewer(El);
-    }
-  };
 
   return (
     <div className={`mb-6 flex justify-end ${isSelf ? '' : 'flex-row-reverse'}`}>
@@ -31,19 +19,7 @@ export default function MessagePopup({ data, user }: Props) {
           isSelf ? 'bg-[#b785f5]' : 'bg-[#2e343d]'
         }`}
       >
-        {data.type === MessageType.TEXT ? (
-          <section className='px-4 py-3'>
-            <FormatedMessage msg={data.message} id={data.id}></FormatedMessage>
-          </section>
-        ) : (
-          <img
-            src={getImageUrl(data.imageUrl)}
-            id={'message_image_' + data.id}
-            alt=''
-            className='max-h-64 cursor-pointer rounded-2xl'
-            onClick={() => viewImage('message_image_' + data.id)}
-          ></img>
-        )}
+        {data ? <FormatedMsg msg={data} /> : null}
       </section>
       <Avatar
         user={user || null}

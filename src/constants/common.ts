@@ -4,8 +4,8 @@ export const enum RoomType {
 }
 
 export const enum GenderEnum {
-  male,
-  female
+  FEMALE,
+  MALE
 }
 
 export enum MessageType {

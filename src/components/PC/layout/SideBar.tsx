@@ -5,15 +5,15 @@ import { Badge } from '@mui/material';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import GroupAddOutlinedIcon from '@mui/icons-material/GroupAddOutlined';
-import ProfileCard from './ProfileCard';
+import ProfileCard from '../../layout/ProfileCard';
 
-enum MenuItemEnum {
-  Chat = 'Chat',
-  Users = 'Users',
-  Settings = 'Settings'
+export enum MenuItemEnum {
+  CHAT = 'Chat',
+  USER = 'Users',
+  SETTINGS = 'Settings'
 }
 
-interface MenuItemType {
+export interface MenuItemType {
   name: MenuItemEnum;
   icon: JSX.Element;
   path: string;
@@ -22,18 +22,18 @@ interface MenuItemType {
 
 const defaultItemList: MenuItemType[] = [
   {
-    name: MenuItemEnum.Chat,
+    name: MenuItemEnum.CHAT,
     icon: <ModeCommentOutlinedIcon />,
     count: 0,
     path: '/app/chat'
   },
   {
-    name: MenuItemEnum.Users,
+    name: MenuItemEnum.USER,
     icon: <GroupAddOutlinedIcon />,
     path: '/app/users'
   },
   {
-    name: MenuItemEnum.Settings,
+    name: MenuItemEnum.SETTINGS,
     icon: <SettingsOutlinedIcon />,
     path: '/app/settings'
   }
@@ -57,7 +57,7 @@ export default function SideBar() {
   };
 
   function getNameByPath() {
-    return defaultItemList.find(item => item.path === location.pathname)?.name || MenuItemEnum.Chat;
+    return defaultItemList.find(item => item.path === location.pathname)?.name || MenuItemEnum.CHAT;
   }
 
   useEffect(() => {

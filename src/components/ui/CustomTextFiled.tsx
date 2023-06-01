@@ -8,13 +8,16 @@ const StyledTextField = styled(TextField)<TextFieldProps>(({ theme }) => ({
     borderRadius: '16px',
     '&:hover fieldset': {
       borderColor: '#9c27b0'
+    },
+    '&:focus': {
+      borderColor: '#9c27b0'
     }
   },
   '& input': {
     color: 'white',
     backgroundColor: '#16171b',
     borderRadius: '16px',
-    boxShadow: '0 0 0 100px #16171b inset !important'
+    boxShadow: '0 0 0 10px #16171b inset !important'
   },
   '& fieldset': {
     borderRadius: '16px',

@@ -3,6 +3,7 @@ import { Box, Tab, Tabs } from '@mui/material';
 import MemojiSetting from './memojiSetting';
 import ProfileSetting from './profileSetting';
 import PasswordSetting from './passwordSetting';
+import { useIsPC } from '@/hooks/useIsPC';
 
 enum TabEnum {
   Memoji = 'memoji',
@@ -17,10 +18,11 @@ const TabMap = {
 };
 
 export default function index() {
+  const isPC = useIsPC();
   const [curTab, setCurTab] = useState<TabEnum>(TabEnum.Memoji);
 
   return (
-    <div className='bg-primary-bg h-screen p-10 text-white'>
+    <div className={`bg-primary-bg h-full text-white ${isPC ? 'p-10' : 'p-4'}`}>
       <Box sx={{ width: '100%' }}>
         <Tabs value={curTab} textColor='secondary' indicatorColor='secondary' onChange={(e, v) => setCurTab(v)}>
           <Tab value={TabEnum.Memoji} label='Memoji' />

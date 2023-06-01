@@ -11,6 +11,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import { CreateRoom, GetSessionList, GetUserList } from '@/api';
 import UserCard from './UserCard';
+import { useIsPC } from '@/hooks/useIsPC';
 
 const theme = createTheme({
   components: {
@@ -37,6 +38,8 @@ export default function index() {
   const [total, setTotal] = useState(0);
   const [keyword, setKeyword] = useState('');
   const [userList, setUserList] = useState<User[]>([]);
+
+  const isPC = useIsPC();
 
   const { refetch } = useQuery(['GetSessionList'], () => GetSessionList(), {
     initialData: [],
@@ -79,9 +82,9 @@ export default function index() {
   });
 
   return (
-    <div className='p-8 bg-primary-bg h-full flex flex-col'>
+    <div className={`bg-primary-bg h-full flex flex-col ${isPC ? 'p-8' : 'overflow-auto p-4 pb-20'}`}>
       <section className='flex justify-center my-14 flex-0'>
-        <section className='w-1/2'>
+        <section className={`${isPC ? 'w-1/2' : 'w-full'}`}>
           <CustomTextField
             fullWidth
             placeholder=' Search User'
@@ -98,10 +101,10 @@ export default function index() {
       </section>
 
       <section className='flex-1'>
-        <section className='flex gap-6 flex-wrap '>
+        <section className={`flex flex-wrap ${isPC ? 'gap-6' : 'gap-2'} `}>
           {userList.map(item => {
             return (
-              <section className='h-32 w-[calc(25%-20px)]' key={item.id}>
+              <section className={` ${isPC ? 'h-32 w-[calc(25%-20px)]' : 'w-full'}`} key={item.id}>
                 <UserCard
                   user={item}
                   onSelect={handleSelected}
@@ -113,7 +116,7 @@ export default function index() {
         </section>
       </section>
 
-      <section className='text-white flex justify-center fex-0'>
+      <section className='text-white flex justify-center flex-0 mt-3'>
         <ThemeProvider theme={theme}>
           <Pagination
             count={Math.floor(total / limit) + 1}

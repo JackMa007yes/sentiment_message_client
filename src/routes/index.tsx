@@ -9,12 +9,6 @@ const Users = lazy(() => import('@/pages/users'));
 const Login = lazy(() => import('@/pages/login'));
 const Landing = lazy(() => import('@/pages/landing'));
 
-// import Layout from '@/components/layout';
-// import Settings from '@/pages/settings';
-// import Users from '@/pages/users';
-// import Login from '@/pages/login';
-// import Landing from '@/pages/landing';
-
 const protectedRoutes = [
   {
     path: '/app',

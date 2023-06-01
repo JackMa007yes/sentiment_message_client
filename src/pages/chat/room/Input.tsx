@@ -8,6 +8,9 @@ import { IconButton } from '@mui/material';
 import CustomTextField from '@/components/ui/CustomTextFiled';
 import EmojiPopover from './EmojiPopover';
 import { MessageType } from '@/constants';
+import { useIsPC } from '@/hooks/useIsPC';
+import { ExpandCircleDown } from '@mui/icons-material';
+import ArrowCircleRightSharpIcon from '@mui/icons-material/ArrowCircleRightSharp';
 
 type Props = {
   onSend: (message: { val: string; type: MessageType }) => void;
@@ -18,6 +21,7 @@ function Input({ onSend }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const anchorElRef = useRef<HTMLInputElement>(null);
   const { enqueueSnackbar } = useSnackbar();
+  const isPC = useIsPC();
 
   const props = {
     action: '/api/room/message/image',
@@ -91,8 +95,8 @@ function Input({ onSend }: Props) {
         placeholder='Send your message'
         value={message}
         multiline
-        maxRows={4}
-        minRows={3}
+        maxRows={3}
+        minRows={isPC ? 2 : 1}
         onChange={(e: any) => setMessage(e.target.value)}
         onKeyPress={(e: KeyboardEvent) => {
           const { shiftKey, key } = e;
@@ -109,9 +113,9 @@ function Input({ onSend }: Props) {
             notChangeMsg();
           }
         }}
-        autoFocus
+        autoFocus={isPC}
         inputRef={inputRef}
-        InputProps={{ style: { paddingRight: '100px' } }}
+        InputProps={{ style: { paddingRight: isPC ? '100px' : '150px' } }}
       ></CustomTextField>
       <section className='absolute right-6 top-1' ref={anchorElRef}>
         <EmojiPopover
@@ -128,6 +132,19 @@ function Input({ onSend }: Props) {
             <img src={imageIcon} alt='' className='w-7'></img>
           </IconButton>
         </Upload>
+        {isPC ? null : (
+          <IconButton
+            onClick={() => {
+              handleSend();
+            }}
+          >
+            <ArrowCircleRightSharpIcon
+              color='primary'
+              fontSize='large'
+              sx={{ transform: 'rotate(270deg) translateY(1px)' }}
+            />
+          </IconButton>
+        )}
       </section>
     </div>
   );

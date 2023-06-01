@@ -1,14 +1,14 @@
-import { Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
 import { useStore } from '@/store';
-import SideBar from './SideBar';
 import { useQuery } from '@tanstack/react-query';
 import { GetProfile, GetSessionList } from '@/api';
 import { useSocket } from '@/hooks/useSocket';
-import Progress from '../ui/Progress';
+import { useIsPC } from '@/hooks/useIsPC';
+import MobileLayout from '../mobile/layout';
+import PCLayout from '../PC/layout';
 
 export default function Layout() {
   const { setProfile, setSessionList, setUpdatedSessionMap } = useStore(state => state);
+  const isPC = useIsPC();
 
   useSocket();
 
@@ -29,14 +29,5 @@ export default function Layout() {
     }
   });
 
-  return (
-    <div className='flex'>
-      <SideBar />
-      <section className='flex-1 bg-primary-bg'>
-        <Suspense fallback={<Progress />}>
-          <Outlet />
-        </Suspense>
-      </section>
-    </div>
-  );
+  return isPC ? <PCLayout /> : <MobileLayout />;
 }

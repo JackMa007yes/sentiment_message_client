@@ -10,7 +10,7 @@ type State = {
 type Action = {
   setLogin: (firstName: State['hasLogin']) => void;
   setProfile: (lastName: State['profile']) => void;
-  setSession: (session: Session) => void;
+  setSession: (session: Session | null) => void;
   setSessionList: (sessionList: Session[]) => void;
   reset: () => void;
 };

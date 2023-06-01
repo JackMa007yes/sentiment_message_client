@@ -21,7 +21,7 @@ export const useSocket = () => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socket = io(import.meta.env.MODE === 'development' ? DEV_SOCKET_URL : '/', {
+    const socket = io(import.meta.env.MODE === 'development' ? 'http://192.168.110.92:3000' : '/', {
       query: {
         token: storage.getToken()?.token
       }

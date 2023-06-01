@@ -31,7 +31,7 @@ export default function LoginPannel({ onJump }: Props) {
     e.preventDefault();
     if (name.trim() && password.trim()) {
       mutateAsync({
-        name,
+        username: name,
         password
       });
     } else {

@@ -1,7 +1,7 @@
 interface SessionBase {
   id: number;
   unreadCount: number;
-  lastMessage: string;
+  lastMessage: IMessage | null;
   lastMessageTime: string;
   createTime: string;
 }

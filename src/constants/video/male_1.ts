@@ -15,7 +15,7 @@ const SentimentClipMap: SentimentRecord = {
   [SentimentScore.negative_5]: [44, 50]
 };
 
-export const MaleVideoSource = {
-  video,
+export const Male1VideoSource = {
+  src: video,
   SentimentClipMap
 };

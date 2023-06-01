@@ -2,10 +2,11 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { useStore } from '@/store';
 import { useQuery } from '@tanstack/react-query';
 import { unionBy } from 'lodash-es';
-import { useUpdateEffect } from 'react-use';
+import { useRaf, useUpdateEffect } from 'react-use';
 import { GetRoomMessage } from '@/api';
 import { SentimentScore } from '@/utils/video/sentimentController';
 import MessagePopup from './MessagePopup';
+import { useIsPC } from '@/hooks/useIsPC';
 
 const LIMIT_NUMBER = 8;
 const isInt = (number: number) => Math.floor(number) === number;
@@ -22,6 +23,7 @@ function Messages({ socketMessage, onSentimentScoreChange }: Props) {
   const [sentimentScore, setSentimentScore] = useState<SentimentScore>(SentimentScore.peaceful);
   const [historyMessageInquired, setHistoryMessageInquired] = useState(false);
   const [lastQueryHistoryMessageLength, setLastQueryHistoryMessageLength] = useState(0);
+  const isPC = useIsPC();
 
   const { isLoading } = useQuery(
     ['GetRoomMessage', page, session?.room.id],
@@ -37,10 +39,20 @@ function Messages({ socketMessage, onSentimentScoreChange }: Props) {
     }
   );
 
-  const scrollTop = () => {
+  const scrollTop = (quick = false) => {
     const box = messageBoxRef.current as null | HTMLElement;
     if (box) {
-      box.scrollTop = box.scrollHeight;
+      if (quick) {
+        box.scrollTop = box.scrollHeight;
+      } else {
+        const moveFn = () => {
+          if (box.scrollTop < box.scrollHeight - box.clientHeight - 20) {
+            box.scrollTop = box.scrollTop + (isPC ? 20 : 5);
+            requestAnimationFrame(moveFn);
+          }
+        };
+        requestAnimationFrame(moveFn);
+      }
     } else {
       // Noop
     }
@@ -83,7 +95,7 @@ function Messages({ socketMessage, onSentimentScoreChange }: Props) {
 
   useUpdateEffect(() => {
     !historyMessageInquired && setHistoryMessageInquired(true);
-    historyMessageInquired ? keepPosition() : scrollTop();
+    historyMessageInquired ? keepPosition() : scrollTop(true);
   }, [historyMessageList]);
 
   useEffect(() => {
@@ -100,7 +112,10 @@ function Messages({ socketMessage, onSentimentScoreChange }: Props) {
   }, [historyMessageList, socketMessage, page, isLoading]);
 
   return (
-    <div className='w-full h-full overflow-auto absolute left-0 top-0 px-10 p-4' ref={messageBoxRef}>
+    <div
+      className={`w-screen h-full overflow-auto absolute right-0 top-0 p-4  ${isPC ? 'px-10' : ''}`}
+      ref={messageBoxRef}
+    >
       {[...historyMessageList, ...socketMessage].map(item => {
         return (
           <MessagePopup

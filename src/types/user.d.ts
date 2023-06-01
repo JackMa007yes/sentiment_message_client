@@ -1,5 +1,5 @@
 import { GenderEnum } from '@/constants/common';
-
+import { MemojiValue } from '@/constants/memoji';
 declare global {
   interface RegisterData {
     name: string;
@@ -8,9 +8,10 @@ declare global {
   }
 
   interface UpdateProfileData {
-    name: string;
-    desc: string;
-    gender: number;
+    name?: string;
+    desc?: string;
+    gender?: number;
+    memoji?: MemojiValue;
   }
 
   interface User {
@@ -19,6 +20,7 @@ declare global {
     desc: string;
     gender: 0 | 1;
     avatar?: string;
+    memoji: MemojiValue;
   }
 
   type Profile = User;

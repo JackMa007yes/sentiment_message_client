@@ -6,11 +6,18 @@ import Messages from './Messages';
 import Input from './Input';
 import Memoji from './Memoji';
 import { MessageType } from '@/constants';
+import { useIsPC } from '@/hooks/useIsPC';
+
+const WrapperClassMap = {
+  PC: 'mr-8 my-10 rounded-t-[24px] flex-1 h-[calc(100vh-30px)] pb-8 flex rounded flex-col overflow-hidden bg-[#1d1e24]',
+  mobile: 'h-full w-full flex flex-col'
+};
 
 function Room() {
   const { session, socketMessageList, client } = useStore(state => state);
   const [memojiDisplay, setMemojiDisplay] = useState(true);
   const [sentimentScore, setSentimentScore] = useState<SentimentScore>(SentimentScore.peaceful);
+  const isPC = useIsPC();
 
   const sendMessage = (message: { type: MessageType; val: string }) => {
     client?.emit('message', {
@@ -29,7 +36,7 @@ function Room() {
   };
 
   return (
-    <div className='mr-8 my-10 rounded-t-[24px] flex-1 h-[calc(100vh-30px)] pb-8 flex rounded flex-col overflow-hidden bg-[#1d1e24]'>
+    <div className={isPC ? WrapperClassMap.PC : WrapperClassMap.mobile}>
       <TopBar
         memoji={{
           open: memojiDisplay,
@@ -38,8 +45,8 @@ function Room() {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         moreClick={() => {}}
       />
-      <section className='flex-1 relative p-8'>
-        <Memoji open={memojiDisplay} score={sentimentScore} />
+      <section className='flex-1 relative w-full'>
+        <Memoji user={session?.toUser} open={memojiDisplay} score={sentimentScore} />
         <Messages key={session?.id} socketMessage={socketMessageList} onSentimentScoreChange={setSentimentScore} />
       </section>
       {session && <Input onSend={sendMessage} />}

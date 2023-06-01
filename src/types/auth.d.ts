@@ -1,5 +1,5 @@
 interface LoginParams {
-  name: string;
+  username: string;
   password: string;
 }
 

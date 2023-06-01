@@ -6,12 +6,16 @@ import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import { checkSessionMessage } from '@/api';
 import CustomTextField from '@/components/ui/CustomTextFiled';
+import { useIsPC } from '@/hooks/useIsPC';
 import SessionList from './SessionList';
+import { ClientToServerEventsEnum } from '@/constants';
+import { TextField } from '@mui/material';
 
 function SessionBar() {
   const { client, session, sessionList, setSession, setSessionList, updatedSessionMap } = useStore(state => state);
   const [searchWord, setSearchWord] = useState('');
   const [filterSessionList, setFilterSessionList] = useState<Session[]>([]);
+  const isPC = useIsPC();
 
   const checkMessage = (session: Session) => {
     const newSessionList = sessionList.map(item => {
@@ -25,7 +29,8 @@ function SessionBar() {
   const { mutateAsync: checkMessageMutate } = useMutation(['checkSessionMessage'], checkSessionMessage);
 
   useEffect(() => {
-    session && client?.emit('joinRoom', { userId: session.fromUser.id, roomId: session.room.id });
+    session &&
+      client?.emit(ClientToServerEventsEnum.JOIN_ROOM, { userId: session.fromUser.id, roomId: session.room.id });
     session && session.unreadCount && checkMessageMutate(session.id);
   }, [session]);
 
@@ -36,17 +41,27 @@ function SessionBar() {
   }, [searchWord, sessionList]);
 
   return (
-    <div className='text-white w-[370px] h-screen py-10 px-8'>
+    <div className={`${isPC ? 'w-[370px] h-screen py-10 px-8' : 'w-full px-3 py-8'}  text-white `}>
       <CustomTextField
         fullWidth
-        placeholder='Search User'
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position='start'>
-              <SearchIcon sx={{ color: 'gray' }} />
-            </InputAdornment>
-          )
-        }}
+        placeholder='Search'
+        InputProps={
+          isPC
+            ? {
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <SearchIcon sx={{ color: 'gray' }} />
+                  </InputAdornment>
+                )
+              }
+            : {
+                endAdornment: (
+                  <InputAdornment position='start'>
+                    <SearchIcon sx={{ color: 'gray' }} />
+                  </InputAdornment>
+                )
+              }
+        }
         onChange={(e: any) => debouncedHandleInput(e.target.value)}
         inputProps={{
           style: {
@@ -54,6 +69,7 @@ function SessionBar() {
           }
         }}
       />
+
       <SessionList
         data={filterSessionList}
         current={session}

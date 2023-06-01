@@ -14,7 +14,7 @@ export default function SignUpPannel({ onJump }: Props) {
 
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [gender, setGender] = useState<GenderEnum>(GenderEnum.male);
+  const [gender, setGender] = useState<GenderEnum>(GenderEnum.MALE);
 
   const { mutateAsync } = useMutation(['Register'], Register, {
     onSuccess: () => {
@@ -73,8 +73,8 @@ export default function SignUpPannel({ onJump }: Props) {
 
         <FormControl sx={{ width: '100%', mb: 3 }}>
           <RadioGroup row value={gender} onChange={(e, v) => setGender(Number(v))}>
-            <FormControlLabel value={GenderEnum.male} control={<Radio sx={{ color: 'gray' }} />} label='Male' />
-            <FormControlLabel value={GenderEnum.female} control={<Radio sx={{ color: 'gray' }} />} label='Female' />
+            <FormControlLabel value={GenderEnum.MALE} control={<Radio sx={{ color: 'gray' }} />} label='Male' />
+            <FormControlLabel value={GenderEnum.FEMALE} control={<Radio sx={{ color: 'gray' }} />} label='Female' />
           </RadioGroup>
         </FormControl>
 

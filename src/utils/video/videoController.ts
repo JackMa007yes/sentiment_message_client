@@ -65,4 +65,11 @@ export class VideoController {
     }
   }
   private checkArrivalEndTime = this._checkArrivalEndTime.bind(this);
+
+  clear() {
+    this.video.removeEventListener('timeupdate', this.checkArrivalEndTime);
+    this.start = 0;
+    this.end = 0;
+    this.isOpenLoop = false;
+  }
 }
